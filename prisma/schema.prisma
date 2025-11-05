@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum roleUser{
+  admin
+  guru
+  siswa
+}
+
+enum statusUser{
+  verified
+  not_verified
+}
+
+enum statusBuku{
+  Tersedia
+  Kosong
+}
+
+model User{
+  id Int @default(autoincrement()) @id
+  email String @db.VarChar(100) @unique
+  password String @db.VarChar(100)
+  nama String @db.VarChar(100)
+  role roleUser
+  token String? @unique @db.VarChar(512)
+  status statusUser @default(not_verified)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  peminjaman Peminjaman[]
+  laporan Laporan[]
+
+  @@map("users")
+}
+
+model Book{
+  id Int @default(autoincrement()) @id
+  judul String @db.VarChar(100)
+  pengarang String @db.VarChar(100)
+  penerbit String @db.VarChar(100)
+  tahun_terbit Int @db.Year()
+  kategori String @db.VarChar(50)
+  stok Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  peminjaman Peminjaman[]
+
+  @@map("books")
+
+}
+
+model Peminjaman{
+  id Int @default(autoincrement()) @id
+  user_id Int
+  buku_id Int
+  tanggal_pinjam DateTime
+  tanggal_kembali DateTime
+  status statusBuku
+  pengembalian Pengembalian?
+
+  user User @relation(fields: [user_id],references: [id] , onDelete: Cascade)
+  buku Book @relation(fields: [buku_id] ,references: [id] , onDelete: Cascade)
+  @@map("peminjaman")
+}
+
+model Pengembalian{
+  id Int @id @default(autoincrement())
+  peminjaman_id Int @unique
+  tanggal_dikembalikan DateTime
+  denda Decimal @db.Decimal(10,2)
+
+  peminjaman Peminjaman @relation(fields: [peminjaman_id] , references: [id] , onDelete: Cascade)
+  @@map("pengembalian")
+}
+
+model Laporan{
+  id Int @id @default(autoincrement())
+  periode String @db.VarChar(25)
+  total_peminjaman Int 
+  total_pengembalian Int
+  dibuat_oleh Int
+  tanggal_laporan DateTime 
+
+  user User @relation(fields: [dibuat_oleh] , references: [id] , onDelete: Cascade)
+  @@map("laporan")
+}
+
+
