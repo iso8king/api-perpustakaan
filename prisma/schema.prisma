@@ -33,6 +33,8 @@ model User{
   role roleUser
   token String? @unique @db.VarChar(512)
   status statusUser @default(not_verified)
+  otp String? @db.VarChar(100)
+  otpExp DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

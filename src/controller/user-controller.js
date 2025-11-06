@@ -12,6 +12,18 @@ const register = async(req,res,next)=>{
     }
 }
 
+const otpValidation = async(req,res,next)=>{
+    try {
+        const result = await userService.verifyOTP(req.body);
+        res.status(200).json({
+            data : result
+        })
+        
+    } catch (e) {
+        next(e)   
+    }
+}
+
 export default {
-    register
+    register,otpValidation
 }
