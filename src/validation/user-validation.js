@@ -10,6 +10,31 @@ export const registerUserValidation = Joi.object({
 })
 
 export const otpVerificationValidation = Joi.object({
-    id : Joi.number().required().min(1),
+    email : Joi.string().required().email(),
     otp : Joi.string().required()
+});
+
+export const loginUserValidation = Joi.object({
+    email : Joi.string().max(100).required(),
+    password : Joi.string().max(100).required()
+})
+
+export const getUserValidation = Joi.string().max(100).required();
+export const emailUserValidation = Joi.string().max(100).email().required();
+
+
+
+export const updateUserValidation = Joi.object({
+    email : Joi.string().email().max(100).optional(),
+    nama : Joi.string().max(100).optional(),
+    id : Joi.number().min(1).required()
+})
+
+export const emailUserValidation2 = Joi.object({
+    email : Joi.string().max(100).email().required()
+})
+
+export const changePasswordUserValidation = Joi.object({
+    password : Joi.string().max(100).required(),
+    token : Joi.string().required()
 })
