@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "nodemon src/app.js",
-    "test": "jest"
+    "test": "jest",
+     "postinstall": "prisma generate"
   },
   "jest": {
     "transform": {
