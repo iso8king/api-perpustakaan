@@ -101,10 +101,11 @@ const get = async(req,res,next)=>{
 const updateProfile = async(req,res,next)=>{
     try {
     const request = req.body;
-    request.id = req.params.id_user;
+    request.id = req.user.id;
     const result = await userService.updateProfile(request);
+    res.cookie("email" , req.user.email);
 
-     res.clearCookie("accessToken" , {path : '/'});
+    res.clearCookie("accessToken" , {path : '/'});
     res.clearCookie("refreshToken" , {path : '/'});
 
     res.status(200).json({

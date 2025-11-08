@@ -287,7 +287,8 @@ const changePassword = async(request)=>{
            id : validUser.id
         },data : {
             password : encryptPassword,
-            otpExp : null
+            otpExp : null,
+            token: null
         }
     })
 }

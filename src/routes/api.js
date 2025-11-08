@@ -9,7 +9,7 @@ userRouter.use(authMiddleware);
 userRouter.delete('/api/users/logout' , userController.logout);
 userRouter.post('/api/users/token' , userController.token);
 userRouter.get('/api/users/current' , userController.get);
-userRouter.patch('/api/users/update/:id_user' , userController.updateProfile)
+userRouter.patch('/api/users/update' , userController.updateProfile)
 
 export {
     userRouter

@@ -19,7 +19,7 @@ export const authMiddleware = async(req,res,next)=>{
         }
          });
         
-         if(!user){
+         if(!user || user.status === "not_verified"){
             res.status(501).json({
             errors : "Unauthorized"
         }).end();

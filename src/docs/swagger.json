@@ -1,0 +1,836 @@
+{
+    "openapi" : "3.0.0",
+    "info" : {
+    "title": "API Perpustakaan SMKN 6 Tangsel",
+    "version" : "1.0.0"
+   },"servers": [
+    {
+        "description": "local",
+        "url": "http://localhost:9999"
+    },
+    {
+        "description": "cloud",
+        "url": "tes.com"
+    }
+   ],
+   "paths": {
+    "/api/users/register" : {
+        "post" :{
+            "tags": ["users"],
+            "summary": "create an account",
+            "responses": {
+                "200" : {
+                    "description": "success create an account",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "id" : {
+                                        "type": "number"
+                                    },
+                                    "email" : {
+                                        "type": "string"
+                                    },
+                                    "nama" : {
+                                        "type": "string"
+                                    },
+                                    "status" : {
+                                        "type": "string"
+                                    },
+                                    "role" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                           "data" : {
+                                             "id" : 1,
+                                            "email" : "example@example.com",
+                                            "nama" : "john doe",
+                                            "status" : "not_verified",
+                                            "role" : "user"
+                                           }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+
+            "requestBody" : {
+                "required": true,
+                "content": {
+                    "application/json" : {
+                        "schema" : {
+                            "type": "object",
+                            "properties": {
+                                "email" :{
+                                    "type": "string",
+                                    "maxLength": 100,
+                                    "required": true
+                                },
+                                "password" : {
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "nama" : {
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "role" : {
+                                    "type":"string",
+                                    "required": true
+                                }
+                            },"example" : {
+                                
+                                "email" : "jomtor@gmail.com",
+                                "password" : "jomtoroganteng",
+                                "nama" : "jontor",
+                                "role" : "user"
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+     "/api/users/login" : {
+        "post" :{
+            "tags": ["users"],
+            "summary": "login to perpus",
+            "responses": {
+                "200" : {
+                    "description": "success login to perpus",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object",
+                                        "properties": {
+                                            "accessToken" : {
+                                                "type": "string"
+                                            },
+                                            "refreshToken" : {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data" : {
+                                                "accessToken" : "ini jwt",
+                                                "refreshToken" : "ini jwt"
+                                            }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"401" : {
+                    "description": "email or password wrong",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "errors" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "error" : {
+                                    "description": "error",
+                                    "value" : 
+                                         {
+                                            "errors" : "Email or password wrong!"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+
+            "requestBody" : {
+                "required": true,
+                "content": {
+                    "application/json" : {
+                        "schema" : {
+                            "type": "object",
+                            "properties": {
+                                "email" :{
+                                    "type": "string",
+                                    "maxLength": 100,
+                                    "required": true
+                                },
+                                "password" : {
+                                    "type": "string",
+                                    "required": true
+                                }
+                            },"example" : {
+                                "email" : "jomtor@gmail.com",
+                                "password" : "jomtoroganteng"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/api/users/otp" : {
+        "post" :{
+            "tags": ["users"],
+            "parameters": [
+                {
+                    "$ref" : "#/components/parameters/email"
+                }
+            ],
+            "summary": "Berhasil verifikasi otp",
+            "responses": {
+                "200" : {
+                    "description": "berhasil verif otp",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data" : "Data Berhasil di verifikasi"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"404" : {
+                    "description": "user or otp not found",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "errors" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "error" : {
+                                    "description": "error",
+                                    "value" : 
+                                         {
+                                            "errors" : "User or otp not found!"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"410" : {
+                    "description": "User Already verified or otp already expired!",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "errors" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "error" : {
+                                    "description": "error",
+                                    "value" : 
+                                         {
+                                            "errors" : "User Already verified or otp already expired!"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+
+            "requestBody" : {
+                "required": true,
+                "content": {
+                    "application/json" : {
+                        "schema" : {
+                            "type": "object",
+                            "properties": {
+                                "otp" :{
+                                    "type": "string",
+                                    "required": true
+                                }
+                            },"example" : {
+                                "otp" : "6769"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },"/api/users/forgotPasswordRequest" : {
+        "post" :{
+            "tags": ["users"],
+            "summary": "Request forgot password, masukan email terus ngirim link untuk ganti password nya",
+            "responses": {
+                "200" : {
+                    "description": "berhasil request",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data" : "OK"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"404" : {
+                    "description": "user not found",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "errors" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "error" : {
+                                    "description": "error",
+                                    "value" : 
+                                         {
+                                            "errors" : "User not found!"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+
+            "requestBody" : {
+                "required": true,
+                "content": {
+                    "application/json" : {
+                        "schema" : {
+                            "type": "object",
+                            "properties": {
+                                "otp" :{
+                                    "type": "email",
+                                    "required": true
+                                }
+                            },"example" : {
+                                "email" : "rohmat@gmail.com"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },"/api/users/changePassword/:token" : {
+        "patch" :{
+            "tags": ["users"],
+            "summary": "route buat change password",
+            "parameters": [
+                {
+                     "$ref" : "#/components/parameters/token"
+                }
+            ],
+            "responses": {
+                "200" : {
+                    "description": "berhasil change pw",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data" : "OK"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"401" : {
+                    "description": "token not valid or expired",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "errors" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "error" : {
+                                    "description": "error",
+                                    "value" : 
+                                         {
+                                            "errors" : "token not valid or expired"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+
+            "requestBody" : {
+                "required": true,
+                "content": {
+                    "application/json" : {
+                        "schema" : {
+                            "type": "object",
+                            "properties": {
+                                "password" :{
+                                    "type": "string",
+                                    "required": true
+                                }
+                            },"example" : {
+                                "password" : "asdasdasdgsdfds"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/api/users/current" : {
+        "get" :{
+            "tags": ["users"],
+            "summary": "get current user",
+            "parameters": [
+                {
+                     "$ref" : "#/components/parameters/accessToken"
+                }
+            ],
+            "responses": {
+                "200" : {
+                    "description": "success get data",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object",
+                                        "properties": {
+                                            "id" : {
+                                                "type": "number"
+                                            },
+                                            "nama" : {
+                                                "type": "string"
+                                            },"email" : {
+                                                "type": "string"
+                                            },
+                                            "status" : {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data" : {
+                                                "email" : "tes@tes.com",
+                                                "nama" : "tes",
+                                                "id" : 1,
+                                                "status" : "verified"
+                                            }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+    },
+    "/api/users/token" : {
+        "post" :{
+            "tags": ["users"],
+            "summary": "refresh access token",
+            "parameters": [
+                {
+                     "$ref" : "#/components/parameters/refreshToken"
+                     
+                },{"$ref" : "#/components/parameters/accessToken"}
+            ],
+            "responses": {
+                "200" : {
+                    "description": "success refresh token",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object",
+                                        "properties": {
+                                            "data" : {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data" : "success"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"400" : {
+                    "description": "token access masih belum expired",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object",
+                                        "properties": {
+                                            "errors" : {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "serror",
+                                    "value" : 
+                                         {
+                                            "errors" : "Token still active"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"401" : {
+                    "description": "token invalid",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object",
+                                        "properties": {
+                                            "errors" : {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "serror",
+                                    "value" : 
+                                         {
+                                            "errors" : "Token invalid"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+    },"/api/users/logout" : {
+        "post" :{
+            "tags": ["users"],
+            "summary": "logout",
+            "parameters": [
+                {
+                     "$ref" : "#/components/parameters/refreshToken"
+                     
+                },{"$ref" : "#/components/parameters/accessToken"}
+            ],
+            "responses": {
+                "200" : {
+                    "description": "success logout",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object",
+                                        "properties": {
+                                            "data" : {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data" : "OK"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                }
+            }
+            
+        
+    },"/api/users/update" : {
+        "post" :{
+            "tags": ["users"],
+            "summary": "update email dan nama",
+            "parameters": [
+                {
+                     "$ref" : "#/components/parameters/refreshToken"
+                     
+                },{"$ref" : "#/components/parameters/accessToken"}
+            ],
+            "responses": {
+                "200" : {
+                    "description": "success update profile",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object",
+                                        "properties": {
+                                            "data" : {
+                                                "type": "object",
+                                                "properties": {
+                                                    "nama" : {
+                                                        "type": "string"
+                                                    },"email" : {
+                                                        "type": "string"
+                                                    },
+                                                    "status" : {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success , abis ganti profile balik lagi untuk aktivasi otp",
+                                    "value" : 
+                                         {
+                                            "data" :{
+                                                "email" : "ridho@ridho@.com",
+                                                "nama" : "ridho",
+                                                "status" : "not_verified"
+                                            }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"404" : {
+                    "description": "user  not found",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "errors" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "error" : {
+                                    "description": "error",
+                                    "value" : 
+                                         {
+                                            "errors" : "User not found!"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                },"requestBody" : {
+                "required": true,
+                "content": {
+                    "application/json" : {
+                        "schema" : {
+                            "type": "object",
+                            "properties": {
+                                "email" :{
+                                    "type": "string",
+                                    "maxLength": 100,
+                                    "required": false
+                                },
+                               
+                                "nama" : {
+                                    "type": "string",
+                                    "required": false
+                                }
+                                
+                            },"example" : {
+                                
+                                "email" : "jomtor@gmail.com",
+                                
+                                "nama" : "jontor"
+                                
+                            }
+                        }
+                    }
+                }
+            }
+            }
+            
+        
+    }
+
+
+
+   },"components": {
+        "parameters": {
+            "accessToken" : {
+                "name": "accessToken",
+                    "in": "cookie",
+                    "required": true,
+                    "description": "login dulu",
+                    "schema" : {
+                        "type": "string",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
+                        }
+                    }
+            },"token" : {
+                "name": "token",
+                    "in": "path",
+                    "required": true,
+                    "description": "token dari link buat change pw",
+                    "schema" : {
+                        "type": "string",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"rfgdfhfnmhgcxfgsdzfesgdfbvxbxvbdf"
+                        }
+                    }
+            },"email" : {
+                "name": "email",
+                    "in": "cookie",
+                    "required": true,
+                    "description": "ini di set abis regist terus di hapus kalo udah verif",
+                    "schema" : {
+                        "type": "string",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"ridho@ridho.com"
+                        }
+                    }
+            },"refreshToken" : {
+                "name": "refreshToken",
+                    "in": "cookie",
+                    "required": true,
+                    "description": "login dulu",
+                    "schema" : {
+                        "type": "string",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
+                        }
+                    }
+            },"id_user" : {
+                "name": "id_user",
+                    "in": "path",
+                    "required": true,
+                    "description": "ini id_user dari jwt",
+                    "schema" : {
+                        "type": "number",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" : 1
+                        }
+                    }
+            }
+        }
+   }
+}
