@@ -112,19 +112,21 @@ const login = async(request) =>{
     const tokenAccess = generateJWT(user.id , user.email , process.env.ACCESS_TOKEN_SECRET , "1h");
     const tokenRefresh =  generateJWT(user.id , user.email , process.env.REFRESH_TOKEN_SECRET, "7d");
 
-    await prismaClient.user.update({
+    const status= await prismaClient.user.update({
         where : {
             email : user.email
         },data : {
             token : tokenRefresh
         },select : {
-            token : true
+            
+            status : true
         }
     });
 
     return {
         token_access  : tokenAccess,
-        token_refresh : tokenRefresh
+        token_refresh : tokenRefresh,
+        status : status.status
     }
 }
 
