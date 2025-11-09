@@ -178,7 +178,8 @@ const getUser = async(email)=>{
             id : true,
             email : true,
             nama : true,
-            role : true
+            role : true,
+            status : true
         }
      })
 
