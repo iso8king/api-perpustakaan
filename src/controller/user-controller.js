@@ -33,10 +33,10 @@ const login = async(req,res,next)=>{
         const request = req.body;
 
         const result = await userService.login(request);
-        res.cookie('accessToken' , result.token_access , {
-            httpOnly : true,
-            path : '/'
-        });
+        // res.cookie('accessToken' , result.token_access , {
+        //     httpOnly : true,
+        //     path : '/'
+        // });
         res.cookie('refreshToken' , result.token_refresh , {
             httpOnly : true,
             path : '/'
@@ -52,7 +52,7 @@ const login = async(req,res,next)=>{
 
 const logout = (req,res,next)=>{
     try {
-        res.clearCookie("accessToken" , {path : '/'});
+        // res.clearCookie("accessToken" , {path : '/'});
         res.clearCookie("refreshToken" , {path : '/'});
 
         res.status(200).json({
@@ -68,20 +68,20 @@ const logout = (req,res,next)=>{
 const token = (req,res,next)=>{
     try {
         const refresh_token = req.cookies.refreshToken;
-        const access_token = req.cookies.accessToken;
+        // const access_token = req.user.accessToken;
 
-        const result = userService.token(access_token , refresh_token);
-        res.cookie('accessToken' , result.tokenAccess , {
-            httpOnly : true,
-            path : '/'
-        });
+        const result = userService.token(refresh_token);
+        // res.cookie('accessToken' , result.tokenAccess , {
+        //     httpOnly : true,
+        //     path : '/'
+        // });
         res.cookie('refreshToken' , result.tokenRefresh , {
             httpOnly : true,
             path : '/'
         });
 
         res.status(200).json({
-            data : "Success"
+            data : result
         })
         
     } catch (e) {
@@ -144,8 +144,21 @@ const forgotPassword = async(req,res,next)=>{
     }
 }
 
+const refresh_otp = async(req,res,next)=> {
+    try {
+    const email = req.cookies.email;
+    const result = await userService.refreshOTP(email);
+    res.status(200).json({
+        data : "OK"
+    })
+        
+    } catch (e) {
+        next(e)
+    }
+}
+
 
 
 export default {
-    get,register,otpValidation,login,logout,token,updateProfile,forgotPasswordCheckEmail,forgotPassword
+    get,refresh_otp,register,otpValidation,login,logout,token,updateProfile,forgotPasswordCheckEmail,forgotPassword
 }

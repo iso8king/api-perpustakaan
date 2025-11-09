@@ -25,7 +25,8 @@ function generateJWT(id , email , secret_token , duration){
 
 const register = async(request)=>{
     const user = validate(registerUserValidation , request);
-    console.log(user)
+    console.log(user);
+    user.role = "user";
 
     user.password = await bcrypt.hash(user.password , 10);
     const otp = generateOTP();
@@ -127,17 +128,30 @@ const login = async(request) =>{
     }
 }
 
-const token = (tokenAccess , tokenRefresh)=> {
-       try {
-        const token_access = jwt.verify(tokenAccess , ACCESS_TOKEN_SECRET);
-        throw new responseError(400 , "Token Masih belum expired");
-    } catch (e) {
-        if(e.name !== 'TokenExpiredError'){
-            throw new responseError(401 , "Token tidak valid");
-        }
-    }
+const token = ( tokenRefresh)=> {
+    //   try {
+    //     const token_access = jwt.verify(tokenAccess , process.env.ACCESS_TOKEN_SECRET);
+    //     throw new responseError(400 , "Token Masih belum expired");
+    // } catch (e) {
+    //     if(e.name !== 'TokenExpiredError' || e.name !== 'Token Masih belum expired'){
+    //         console.log(e)
+    //         throw new responseError(401 , "Token tidak valid");
+    //     }else if(e.name === 'TokenExpiredError'){
+    //     const refresh_token = jwt.verify(tokenRefresh ,process.env.REFRESH_TOKEN_SECRET);
 
-    const refresh_token = jwt.verify(tokenRefresh ,process.env.REFRESH_TOKEN_SECRET);
+    //     const tokenAccessNew = generateJWT(refresh_token.id , refresh_token.email , process.env.ACCESS_TOKEN_SECRET , "1h");
+    //     const tokenRefreshNew = generateJWT(refresh_token.id , refresh_token.email , process.env.REFRESH_TOKEN_SECRET , "7d");
+
+    //     return {
+    //         tokenAccess : tokenAccessNew,
+    //         tokenRefresh : tokenRefreshNew
+    //     }
+    //     }
+    // }
+
+        if(!tokenRefresh) throw new responseError(404 , "token refresh not found!")
+
+        const refresh_token = jwt.verify(tokenRefresh ,process.env.REFRESH_TOKEN_SECRET);
 
         const tokenAccessNew = generateJWT(refresh_token.id , refresh_token.email , process.env.ACCESS_TOKEN_SECRET , "1h");
         const tokenRefreshNew = generateJWT(refresh_token.id , refresh_token.email , process.env.REFRESH_TOKEN_SECRET , "7d");
@@ -146,6 +160,8 @@ const token = (tokenAccess , tokenRefresh)=> {
             tokenAccess : tokenAccessNew,
             tokenRefresh : tokenRefreshNew
         }
+
+   
 }
 
 // const change_password = async(email)=>{
@@ -292,11 +308,37 @@ const changePassword = async(request)=>{
     })
 }
 
+const refreshOTP = async(email) => {
+    email = validate(emailUserValidation, email);
 
+    //kalo mau dicek
+    // const user = await prismaClient.user.findUnique({
+    //     where : {
+    //         email : email
+    //     },select : {
+    //         otp : true,
+    //         otpExp : true
+    //     }
+    // })
+    const otp = generateOTP();
+    const otpHash = await bcrypt.hash(otp , 10);
 
+    const otpExp = new Date(Date.now() + 60 * 60 * 1000);
 
+     await sendOTP(email , otp);
+     await prismaClient.user.update({
+        where : {
+            email : email
+        },
+        data : {
+            otp : otpHash,
+            otpExp : otpExp
+        }
+     })
+     
+}
 
 
 export default{
-    register,verifyOTP,login,token,getUser,updateProfile,forgotPasswordCheckEmail,changePassword
+    register,verifyOTP,login,token,getUser,updateProfile,forgotPasswordCheckEmail,changePassword,refreshOTP
 }

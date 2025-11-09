@@ -9,6 +9,8 @@ publicRouter.post('/api/users/otp' , userController.otpValidation);
 publicRouter.post('/api/users/login' , userController.login);
 publicRouter.post('/api/users/forgotPasswordRequest' , userController.forgotPasswordCheckEmail);
 publicRouter.patch('/api/users/changePassword/:token' , userController.forgotPassword);
+publicRouter.post('/api/users/refreshOtp' , userController.refresh_otp);
+publicRouter.post('/api/users/token' , userController.token);
 
 export{
     publicRouter

@@ -7,7 +7,7 @@ const userRouter = express.Router();
 userRouter.use(authMiddleware);
 
 userRouter.delete('/api/users/logout' , userController.logout);
-userRouter.post('/api/users/token' , userController.token);
+
 userRouter.get('/api/users/current' , userController.get);
 userRouter.patch('/api/users/update' , userController.updateProfile)
 
