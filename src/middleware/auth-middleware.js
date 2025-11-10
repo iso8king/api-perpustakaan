@@ -20,19 +20,18 @@ export const authMiddleware = async (req, res, next) => {
       data: null,
     });
   }
-    let tokenDecrypt;
+  let tokenDecrypt;
 
   try {
-  tokenDecrypt = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    
+    tokenDecrypt = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
   } catch (error) {
-     console.log(error);
-      return res.status(403).json({
+    console.log(error);
+    return res.status(403).json({
       status: 403,
       data: {
-        "jwt-error-message" : error.message
-      }
-    });  
+        jwtError: error.message,
+      },
+    });
   }
 
   const user = await prismaClient.user.findFirst({
@@ -45,7 +44,6 @@ export const authMiddleware = async (req, res, next) => {
   req.user.accessToken = token;
   next();
 };
-
 
 //ini pake cookie
 //  const token = req.cookies.accessToken;
@@ -62,7 +60,7 @@ export const authMiddleware = async (req, res, next) => {
 //             id : tokenDecrypt.id
 //         }
 //          });
-        
+
 //          if(!user || user.status === "not_verified"){
 //             res.status(501).json({
 //             errors : "Unauthorized"
