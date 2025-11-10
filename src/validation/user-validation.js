@@ -27,7 +27,8 @@ export const emailUserValidation = Joi.string().max(100).email().required();
 export const updateUserValidation = Joi.object({
     email : Joi.string().email().max(100).optional(),
     nama : Joi.string().max(100).optional(),
-    id : Joi.number().min(1).required()
+    id : Joi.number().min(1).required(),
+    emailFirst : Joi.string().email().max(100).required()
 })
 
 export const emailUserValidation2 = Joi.object({

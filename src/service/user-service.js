@@ -29,14 +29,21 @@ const register = async(request)=>{
     user.role = "user";
 
     user.password = await bcrypt.hash(user.password , 10);
-    const otp = generateOTP();
-    const otpHash = await bcrypt.hash(otp , 10);
-    user.otp = otpHash;
+    // const otp = generateOTP();
+    // const otpHash = await bcrypt.hash(otp , 10);
+    // user.otp = otpHash;
 
-    const otpExp = new Date(Date.now() + 60 * 60 * 1000);
-    user.otpExp = otpExp
+    // const otpExp = new Date(Date.now() + 60 * 60 * 1000);
+    // user.otpExp = otpExp
 
-     await sendOTP(user.email , otp);
+    const token = crypto.randomBytes(32).toString('hex');
+    const linkExp = new Date(Date.now() + 60 * 60 * 1000);
+    // const tokenEncrpyt = await bcrypt.hash(token , 5);
+    user.otpExp = linkExp;
+    user.token = token;
+
+
+     await sendLink(user.email , token , "Verifikasi Akun Perpustakaan");
 
     const registerUser = await prismaClient.user.create({
         data : user,
@@ -209,18 +216,27 @@ const updateProfile = async(request) => {
     
     if(request.email){
         data.email = request.email;
+    }else{
+        data.email = request.emailFirst
     }
 
     if(request.nama){
         data.nama = request.nama;
     }
 
-    const otp = generateOTP();
-    const otpHash = await bcrypt.hash(otp , 10);
-    data.otp = otpHash;
+    // const otp = generateOTP();
+    // const otpHash = await bcrypt.hash(otp , 10);
+    // data.otp = otpHash;
 
-    const otpExp = new Date(Date.now() + 60 * 60 * 1000);
-    data.otpExp = otpExp
+    // const otpExp = new Date(Date.now() + 60 * 60 * 1000);
+    // data.otpExp = otpExp
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const linkExp = new Date(Date.now() + 60 * 60 * 1000);
+    data.token = token;
+    data.otpExp = linkExp;
+
+    await sendLink(data.email , token , "Aktivasi Akun Perpustakaan")
 
     const user = await prismaClient.user.update({
         where : {
@@ -234,7 +250,7 @@ const updateProfile = async(request) => {
         }
     });
 
-    await sendOTP(user.email , otp);
+    
 
     return user;
 
@@ -255,7 +271,7 @@ const forgotPasswordCheckEmail = async(email)=>{
     const linkExp = new Date(Date.now() + 60 * 60 * 1000);
     const tokenEncrpyt = await bcrypt.hash(token , 5);
 
-    await sendLink(emailRequest.email , token);
+    await sendLink(emailRequest.email , token , "Verifikasi Penggantian Password Akun Perpustakaan");
 
     await prismaClient.user.update({
         where : {
@@ -309,37 +325,66 @@ const changePassword = async(request)=>{
     })
 }
 
-const refreshOTP = async(email) => {
-    email = validate(emailUserValidation, email);
+// const activation_acc = ()
 
-    //kalo mau dicek
-    // const user = await prismaClient.user.findUnique({
-    //     where : {
-    //         email : email
-    //     },select : {
-    //         otp : true,
-    //         otpExp : true
-    //     }
-    // })
-    const otp = generateOTP();
-    const otpHash = await bcrypt.hash(otp , 10);
+const refresh_activate = async(token) => {
+    // email = validate(emailUserValidation, email);
 
-    const otpExp = new Date(Date.now() + 60 * 60 * 1000);
-
-     await sendOTP(email , otp);
-     await prismaClient.user.update({
+    
+    const user = await prismaClient.user.findUnique({
         where : {
-            email : email
+            token : token
+        },select : {
+            status : true,
+            id : true,
+            email : true
+        }
+    });
+
+    if(!user) throw new responseError(404 , "token not found")
+    const tokenActivate = crypto.randomBytes(32).toString('hex');
+    const linkExp = new Date(Date.now() + 60 * 60 * 1000);
+
+
+     await sendLink(user.email , tokenActivate , "Verifikasi Akun Perpustakaan");
+
+     return prismaClient.user.update({
+        where : {
+            id : user.id
         },
         data : {
-            otp : otpHash,
-            otpExp : otpExp
+            otp : tokenActivate,
+            otpExp : linkExp
+        },select : {
+            token : true
         }
      })
      
 }
 
+const validate_activation = async(token)=>{
+    const user= await prismaClient.user.findFirst({
+        where : {
+            token : token
+        },
+        select : {
+            status : true,
+            otpExp : true,
+            email : true
+        }
+    });
+
+    if(!user || user.status === "verified") throw new responseError(401 , "Token tidak ditemukan atau sudah di verifikasi");
+    if(user.otpExp.getTime() < Date.now()) throw new responseError(401 , "Token expired");
+
+    await prismaClient.user.update({
+        where : {
+            email : user.email
+        },data : {status : "verified"}
+    })
+}
+
 
 export default{
-    register,verifyOTP,login,token,getUser,updateProfile,forgotPasswordCheckEmail,changePassword,refreshOTP
+    register,validate_activation,verifyOTP,login,token,getUser,updateProfile,forgotPasswordCheckEmail,changePassword,refresh_activate
 }

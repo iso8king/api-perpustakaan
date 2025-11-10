@@ -32,7 +32,7 @@ export const sendOTP = async(email , otp)=>{
     }
 }
 
-export const sendLink = async(email , tokenChangePassword)=>{
+export const sendLink = async(email , tokenChangePassword , subject)=>{
     try {
         const transporter = nodemailer.createTransport({
     service : "gmail",
@@ -45,12 +45,12 @@ export const sendLink = async(email , tokenChangePassword)=>{
      await transporter.sendMail({
         from :`"Perpustakaan Digital" <${process.env.EMAIL_USERNAME}>`,
         to : email,
-        subject : "Verifikasi Penggantian Password Akun Perpustakaan",
+        subject : `${subject}`,
         html: `
         <h3>Halo!</h3>
-        <p>Link Pergantian password kamu adalah:</p>
+        <p>Link ${subject} kamu adalah:</p>
         <h1>
-        <a href="http://localhost:9999/api/users/changePassword/${tokenChangePassword}">klik ini</a>
+        <a href="http://localhost:9999/api/users/activate?code=${tokenChangePassword}">klik ini</a>
         </h1>
         <p>Link Ini berlaku selama 1 jam</p>
          `,

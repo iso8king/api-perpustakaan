@@ -3,7 +3,7 @@ import userService from "../service/user-service.js";
 const register = async(req,res,next)=>{
     try {
         const result = await userService.register(req.body);
-        res.cookie("email" , result.email);
+        // res.cookie("email" , result.email);
         res.status(200).json({
             data : result
         })
@@ -102,10 +102,11 @@ const updateProfile = async(req,res,next)=>{
     try {
     const request = req.body;
     request.id = req.user.id;
+    request.emailFirst = req.user.email;
     const result = await userService.updateProfile(request);
-    res.cookie("email" , req.user.email);
+    // res.cookie("email" , req.user.email);
 
-    res.clearCookie("accessToken" , {path : '/'});
+    // res.clearCookie("accessToken" , {path : '/'});
     res.clearCookie("refreshToken" , {path : '/'});
 
     res.status(200).json({
@@ -144,12 +145,12 @@ const forgotPassword = async(req,res,next)=>{
     }
 }
 
-const refresh_otp = async(req,res,next)=> {
+const refresh_activate = async(req,res,next)=> {
     try {
-    const email = req.cookies.email;
-    const result = await userService.refreshOTP(email);
+    const token = req.query.code;
+    const result = await userService.refresh_activate(token);
     res.status(200).json({
-        data : "OK"
+        data : result
     })
         
     } catch (e) {
@@ -157,8 +158,20 @@ const refresh_otp = async(req,res,next)=> {
     }
 }
 
+const validating_activation = async(req,res,next)=>{
+    try {
+        const token = req.query.code;
+        const result = await userService.validate_activation(token);
+        res.status(200).json({
+            data : "OK"
+        });
+        
+    } catch (e) {
+        next(e)      
+    }
+}
 
 
 export default {
-    get,refresh_otp,register,otpValidation,login,logout,token,updateProfile,forgotPasswordCheckEmail,forgotPassword
+    validating_activation,get,refresh_activate,register,otpValidation,login,logout,token,updateProfile,forgotPasswordCheckEmail,forgotPassword
 }

@@ -197,15 +197,15 @@
             }
         }
     },
-    "/api/users/otp" : {
+    "/api/users/activate" : {
         "post" :{
             "tags": ["users"],
             "parameters": [
                 {
-                    "$ref" : "#/components/parameters/email"
+                    "$ref" : "#/components/parameters/code"
                 }
             ],
-            "summary": "Berhasil verifikasi otp",
+            "summary": "Berhasil verifikasi akun",
             "responses": {
                 "200" : {
                     "description": "berhasil verif otp",
@@ -223,15 +223,15 @@
                                     "description": "success",
                                     "value" : 
                                          {
-                                            "data" : "Data Berhasil di verifikasi"
+                                            "data" : "OK"
                                         }
                                     
                                 }
                             }
                         }
                     }
-                },"404" : {
-                    "description": "user or otp not found",
+                },"401" : {
+                    "description": "token not found",
                     "content": {
                         "application/json" : {
                             "schema" : {
@@ -242,13 +242,16 @@
                                     }
                                 }
                             },"examples": {
-                                "error" : {
-                                    "description": "error",
+                                "error 1" : {
+                                    "description": "not found atau verified",
                                     "value" : 
                                          {
-                                            "errors" : "User or otp not found!"
+                                            "errors" : "Token tidak ditemukan atau sudah di verifikasi"
                                         }
                                     
+                                },"error 2" : {
+                                    "description": "token expired",
+                                    "value" : {"errors" : "token expired"}
                                 }
                             }
                         }
@@ -273,25 +276,6 @@
                                         }
                                     
                                 }
-                            }
-                        }
-                    }
-                }
-            },
-
-            "requestBody" : {
-                "required": true,
-                "content": {
-                    "application/json" : {
-                        "schema" : {
-                            "type": "object",
-                            "properties": {
-                                "otp" :{
-                                    "type": "string",
-                                    "required": true
-                                }
-                            },"example" : {
-                                "otp" : "6769"
                             }
                         }
                     }
@@ -538,7 +522,9 @@
                                     "description": "success",
                                     "value" : 
                                          {
-                                            "data" : "success"
+                                            "data" : {
+                                                "accessToken" : "ini jwt"
+                                            }
                                         }
                                     
                                 }
@@ -758,7 +744,72 @@
             }
             
         
-    }
+    },
+    "/api/users/refreshCode" : {
+        "post" :{
+            "tags": ["users"],
+            "parameters": [
+                {
+                    "$ref" : "#/components/parameters/code"
+                }
+            ],
+            "summary": "Berhasil verifikasi akun",
+            "responses": {
+                "200" : {
+                    "description": "berhasil refresh link aktivasi",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data" : {
+                                                "token" : "ini kode "
+                                            }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"404" : {
+                    "description": "token not found",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "errors" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "error 1" : {
+                                    "description": "not found atau verified",
+                                    "value" : 
+                                         {
+                                            "errors" : "Token tidak ditemukan atau sudah di verifikasi"
+                                        }
+                                    
+                                },"error 2" : {
+                                    "description": "token expired",
+                                    "value" : {"errors" : "token expired"}
+                                }
+                            }
+                        }
+                    }
+                        }
+                    }
+                }
+            }
 
 
 
@@ -832,6 +883,20 @@
                     },"examples": {
                         "-" : {
                             "value" : 1
+                        }
+                    }
+            },"code" : {
+                "name": "code",
+                    "in": "query",
+                    "required": true,
+                    "description": "token dari regist",
+                    "schema" : {
+                        "type": "string",
+                         "minLength": 1,
+                        "maxLength": 512
+                    },"examples": {
+                        "-" : {
+                            "value" :"ini kode hex 32"
                         }
                     }
             }
