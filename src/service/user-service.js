@@ -51,7 +51,7 @@ const register = async (request) => {
   user.otpExp = linkExp;
   user.token = token;
 
-  await sendLink(user.email, token, "Verifikasi Akun Perpustakaan");
+  await sendLink(emailRequest.email, token, "Verifikasi Akun Perpustakaan", "activate");
 
   const registerUser = await prismaClient.user.create({
     data: user,
@@ -271,7 +271,7 @@ const forgotPasswordCheckEmail = async (email) => {
   const linkExp = new Date(Date.now() + 60 * 60 * 1000);
   const tokenEncrpyt = await bcrypt.hash(token, 5);
 
-  await sendLink(emailRequest.email, token, "Verifikasi Penggantian Password Akun Perpustakaan");
+  await sendLink(emailRequest.email, token, "Verifikasi Penggantian Password Akun Perpustakaan", "reset");
 
   await prismaClient.user.update({
     where: {
