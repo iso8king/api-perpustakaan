@@ -31,7 +31,7 @@ export const sendOTP = async (email, otp) => {
   }
 };
 
-export const sendLink = async (email, tokenChangePassword, subject) => {
+export const sendLink = async (email, token, subject, type = "activate") => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -41,24 +41,40 @@ export const sendLink = async (email, tokenChangePassword, subject) => {
       },
     });
 
+    // Tentukan URL front-end berdasarkan environment
+    const baseUrl =
+      process.env.NODE_ENV === "production"
+        ? process.env.FRONTEND_URL // misal: https://perpusdigital.vercel.app
+        : "http://localhost:3000";
+
+    // Tentukan path berdasarkan jenis email
+    const path = type === "reset" ? `/auth/resetPassword?token=${token}` : `/auth/activate?code=${token}`;
+
+    const link = `${baseUrl}${path}`;
+
+    const actionText = type === "reset" ? "reset password akun kamu" : "aktivasi akun kamu";
+
     await transporter.sendMail({
       from: `"Perpustakaan Digital" <${process.env.EMAIL_USERNAME}>`,
       to: email,
       subject: `${subject}`,
       html: `
         <h3>Halo!</h3>
-        <p>Link ${subject} kamu adalah:</p>
-        <h1>
-        <a href="http://localhost:3000/auth/activate?code=${tokenChangePassword}">klik ini</a>
-        </h1>
-        <p>Link Ini berlaku selama 1 jam</p>
-         `,
-
-      //disini jangan lupa ganti href nya dan kalo bisa pake button nanti omongin ama fe dulu pokok e
+        <p>Berikut adalah link untuk ${actionText}:</p>
+        <a href="${link}" style="
+          display: inline-block;
+          padding: 10px 20px;
+          background-color: #007BFF;
+          color: white;
+          border-radius: 5px;
+          text-decoration: none;
+        ">Klik di sini</a>
+        <p>Link ini hanya berlaku selama <b>1 jam</b>.</p>
+      `,
     });
   } catch (e) {
-    console.log(e.message);
-    throw new responseError(500, "Gagal Send email , silahkan cek log server");
+    console.error("Gagal mengirim email:", e.message);
+    throw new responseError(500, "Gagal mengirim email, silakan cek log server");
   }
 };
 
