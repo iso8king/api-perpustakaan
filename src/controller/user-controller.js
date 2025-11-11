@@ -102,7 +102,7 @@ const updateProfile = async (req, res, next) => {
     // res.cookie("email" , req.user.email);
 
     // res.clearCookie("accessToken" , {path : '/'});
-    res.clearCookie("refreshToken", { path: "/" });
+    // res.clearCookie("refreshToken", { path: "/" });
 
     res.status(200).json({
       data: result,

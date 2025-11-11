@@ -203,25 +203,19 @@ const getUser = async (email) => {
 //tinggal bikin forgot password sama update data
 const updateProfile = async (request) => {
   request = validate(updateUserValidation, request);
-  const data = {
-    status: "not_verified",
-  };
+  const data = {}
 
   const validateUser = await prismaClient.user.count({
     where: {
       id: request.id,
-    },
+    }
   });
 
   if (!validateUser) {
     throw new responseError(404, "User Not Found!");
   }
 
-  if (request.email) {
-    data.email = request.email;
-  } else {
-    data.email = request.emailFirst;
-  }
+  data.email = request.emailFirst;
 
   if (request.nama) {
     data.nama = request.nama;
@@ -234,12 +228,12 @@ const updateProfile = async (request) => {
   // const otpExp = new Date(Date.now() + 60 * 60 * 1000);
   // data.otpExp = otpExp
 
-  const token = crypto.randomBytes(32).toString("hex");
-  const linkExp = new Date(Date.now() + 60 * 60 * 1000);
-  data.token = token;
-  data.otpExp = linkExp;
+//   const token = crypto.randomBytes(32).toString("hex");
+//   const linkExp = new Date(Date.now() + 60 * 60 * 1000);
+//   data.token = token;
+//   data.otpExp = linkExp;
 
-  await sendLink(data.email, token, "Aktivasi Akun Perpustakaan");
+//   await sendLink(data.email, token, "Aktivasi Akun Perpustakaan");
 
   const user = await prismaClient.user.update({
     where: {
