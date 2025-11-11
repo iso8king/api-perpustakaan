@@ -10,10 +10,7 @@ import cors from "cors"
 import path from "path";
 import { fileURLToPath } from "url";
 
-import { publicRouter } from "../routes/public-api.js";
-import { userRouter } from "../routes/api.js";
-import { errorMiddleware } from "../middleware/error-middleware.js";
-import { swaggerUi } from "./swagger.js";
+
 
 dotenv.config();
 export const web = express();
