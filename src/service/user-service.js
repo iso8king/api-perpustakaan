@@ -1,4 +1,3 @@
-import { web } from "../application/web.js";
 import { prismaClient } from "../application/database.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -354,7 +353,7 @@ const refresh_activate = async (token) => {
       id: user.id,
     },
     data: {
-      otp: tokenActivate,
+      token: tokenActivate,
       otpExp: linkExp,
     },
     select: {

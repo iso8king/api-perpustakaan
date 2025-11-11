@@ -31,7 +31,7 @@ export const sendOTP = async (email, otp) => {
   }
 };
 
-export const sendLink = async (email, tokenChangePassword, subject) => {
+export const sendLink = async (email, token, subject) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -49,7 +49,7 @@ export const sendLink = async (email, tokenChangePassword, subject) => {
         <h3>Halo!</h3>
         <p>Link ${subject} kamu adalah:</p>
         <h1>
-        <a href="http://localhost:3000/auth/activate?code=${tokenChangePassword}">klik ini</a>
+        <a href="http://localhost:3000/auth/activate?code=${token}">klik ini</a>
         </h1>
         <p>Link Ini berlaku selama 1 jam</p>
          `,

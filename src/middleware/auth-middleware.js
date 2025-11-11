@@ -40,10 +40,31 @@ export const authMiddleware = async (req, res, next) => {
     },
   });
 
+   if (user.status === "not_verified") {
+    return res.status(403).json({
+      status: 403,
+      data: null,
+    });
+  }
+
   req.user = user;
   req.user.accessToken = token;
   next();
 };
+
+
+export const roleMiddleware = (roleAllowed = []) => {
+    return (req,res,next) => {
+        const role = req.user.role;
+        if(!roleAllowed.includes(role)){
+            res.status(403).json({
+            status: 403,
+            data: "your role not allowed in here"
+         });
+        }
+        next();
+    }
+}
 
 //ini pake cookie
 //  const token = req.cookies.accessToken;
