@@ -1,8 +1,12 @@
-import express from "express";
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import fs from "fs";
+import express from "express"
+import dotenv from "dotenv"
+import cookieParser from "cookie-parser"
+import { publicRouter } from "../routes/public-api.js";
+import { errorMiddleware } from "../middleware/error-middleware.js";
+import { adminRouter, userRouter } from "../routes/api.js";
+import { swaggerUi } from "./swagger.js";
+import fs from "fs"
+import cors from "cors"
 import path from "path";
 import { fileURLToPath } from "url";
 

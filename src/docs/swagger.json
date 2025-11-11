@@ -809,7 +809,232 @@
                         }
                     }
                 }
+            },
+        "/api/books/create" : {
+        "post" :{
+            "tags": ["admin"],
+            "parameters": [
+                {
+                    "$ref" : "#/components/parameters/accessToken"
+                }
+            ],
+            "summary": "Memasukan Data buku",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data" : {
+                                                "id" : 1,
+                                                "judul" : "buku1",
+                                                "pengarang" : "jondok",
+                                                "penerbit" : "penerbit",
+                                                "tahun_terbit" : 1999,
+                                                "kategori" : "fiksi",
+                                                "stok" : 1
+                                            }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    },"requestBody" : {
+                "required": true,
+                "content": {
+                    "application/json" : {
+                        "schema" : {
+                            "$ref" : "#/components/schemas/body_create"
+                        }
+                    }
+                }
             }
+                }
+            },
+            "/api/books/get/:id_buku" : {
+        "get" :{
+            "tags": ["admin"],
+            "parameters": [
+                {
+                    "$ref" : "#/components/parameters/accessToken"
+                },
+                {
+                    "$ref" : "#/components/parameters/id_buku"
+                }
+            ],
+            "summary": "get Data buku",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data" : {
+                                                "id" : 1,
+                                                "judul" : "buku1",
+                                                "pengarang" : "jondok",
+                                                "penerbit" : "penerbit",
+                                                "tahun_terbit" : 1999,
+                                                "kategori" : "fiksi",
+                                                "stok" : 1
+                                            }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    }
+                }
+            },"/api/books/update/:id_buku" : {
+        "patch" :{
+            "tags": ["admin"],
+            "parameters": [
+                {
+                    "$ref" : "#/components/parameters/accessToken"
+                },
+                {
+                    "$ref" : "#/components/parameters/id_buku"
+                }
+            ],
+            "summary": "update Data buku",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data" : {
+                                                "id" : 1,
+                                                "judul" : "buku1",
+                                                "pengarang" : "jondok",
+                                                "penerbit" : "penerbit",
+                                                "tahun_terbit" : 1999,
+                                                "kategori" : "fiksi",
+                                                "stok" : 1
+                                            }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"400" : {
+                    "description": "tidak ada data yang diubah",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "errors" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "err",
+                                    "value" : 
+                                         {
+                                           "errors" : "tidak ada data yang diubah"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    },"requestBody" : {
+                "required": true,
+                "description": "field nya semua nya optional",
+                "content": {
+                    "application/json" : {
+                        
+                        "schema" : {
+                            "$ref" : "#/components/schemas/body_update"
+                        }
+                    }
+                }
+            }
+                }
+            },
+             "/api/books/delete/:id_buku" : {
+        "delete" :{
+            "tags": ["admin"],
+            "parameters": [
+                {
+                    "$ref" : "#/components/parameters/accessToken"
+                },
+                {
+                    "$ref" : "#/components/parameters/id_buku"
+                }
+            ],
+            "summary": "delete Data buku",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data" : "OK"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    }
+                }
+            }
+            
+
 
 
 
@@ -817,7 +1042,7 @@
         "parameters": {
             "accessToken" : {
                 "name": "accessToken",
-                    "in": "cookie",
+                    "in": "header",
                     "required": true,
                     "description": "login dulu",
                     "schema" : {
@@ -899,7 +1124,74 @@
                             "value" :"ini kode hex 32"
                         }
                     }
+            },
+            "id_buku" : {
+                "name": "id_buku",
+                    "in": "params",
+                    "required": true,
+                    "description": "id buku di taruh di params",
+                    "schema" : {
+                        "type": "number",
+                         "minLength": 1
+                        
+                    },"examples": {
+                        "-" : {
+                            "value" :1
+                        }
+                    }
             }
+        },"schemas": {
+            "body_create" : {
+                                "type": "object",
+                                "properties": {
+                                    "judul" : {
+                                        "type": "string"
+                                    },
+                                    "pengarang" : {
+                                        "type": "string"
+                                    },"penerbit" : {
+                                        "type": "string"
+                                    },"tahun_terbit" : {
+                                        "type": "number",
+                                        "format": "int32"
+                                    },"kategori" : {
+                                        "type": "string"
+                                    },
+                                    "stok" : {
+                                        "type": "number"
+                                        ,"format": "int32"
+                                    }
+                                    
+                                }
+        },"body_update" : {
+                                "type": "object",
+                                "properties": {
+                                    "judul" : {
+                                        "type": "string",
+                                        "required": false
+                                    },
+                                    "pengarang" : {
+                                        "type": "string",
+                                        "required": false
+                                    },"penerbit" : {
+                                        "type": "string",
+                                        "required": false
+                                    },"tahun_terbit" : {
+                                        "type": "number",
+                                        "format": "int32"
+                                        ,"required": false
+                                    },"kategori" : {
+                                        "type": "string",
+                                        "required": false
+                                    },
+                                    "stok" : {
+                                        "type": "number"
+                                        ,"format": "int32",
+                                        "required": false
+                                    }
+                                    
+                                }
+        }
         }
    }
 }
