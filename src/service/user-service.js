@@ -34,7 +34,7 @@ function generateJWT(id, email, secret_token, duration) {
 
 const register = async (request) => {
   const user = validate(registerUserValidation, request);
-  console.log(user);
+//   console.log(user);
   user.role = "user";
 
   user.password = await bcrypt.hash(user.password, 10);
@@ -46,12 +46,12 @@ const register = async (request) => {
   // user.otpExp = otpExp
 
   const token = crypto.randomBytes(32).toString("hex");
-  const linkExp = new Date(Date.now() + 60 * 60 * 1000);
+//   const linkExp = new Date(Date.now() + 60 * 60 * 1000);
   // const tokenEncrpyt = await bcrypt.hash(token , 5);
-  user.otpExp = linkExp;
+//   user.otpExp = linkExp;
   user.token = token;
 
-  await sendLink(emailRequest.email, token, "Verifikasi Akun Perpustakaan", "activate");
+  await sendLink(user.email, token, "Verifikasi Akun Perpustakaan", "activate");
 
   const registerUser = await prismaClient.user.create({
     data: user,
@@ -344,7 +344,7 @@ const refresh_activate = async (token) => {
 
   if (!user) throw new responseError(404, "token not found");
   const tokenActivate = crypto.randomBytes(32).toString("hex");
-  const linkExp = new Date(Date.now() + 60 * 60 * 1000);
+//   const linkExp = new Date(Date.now() + 60 * 60 * 1000);
 
   await sendLink(user.email, tokenActivate, "Verifikasi Akun Perpustakaan");
 
@@ -368,13 +368,12 @@ const validate_activation = async (token) => {
     select: {
       id: true,
       status: true,
-      otpExp: true,
-      email: true,
+      email: true
     },
   });
 
   if (!user) throw new responseError(401, "Token tidak ditemukan");
-  if (user.otpExp.getTime() < Date.now()) throw new responseError(401, "Token expired");
+//   if (user.otpExp.getTime() < Date.now()) throw new responseError(401, "Token expired");
 
   // hanya return user info — tidak update status di sini
   return user;

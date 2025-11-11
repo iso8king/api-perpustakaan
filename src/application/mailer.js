@@ -69,7 +69,6 @@ export const sendLink = async (email, token, subject, type = "activate") => {
           border-radius: 5px;
           text-decoration: none;
         ">Klik di sini</a>
-        <p>Link ini hanya berlaku selama <b>1 jam</b>.</p>
       `,
     });
   } catch (e) {
