@@ -42,4 +42,5 @@ web.use(
 
 web.use(publicRouter);
 web.use(userRouter);
+web.use(adminRouter)
 web.use(errorMiddleware);
