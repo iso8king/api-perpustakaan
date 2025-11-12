@@ -48,7 +48,7 @@ export const sendLink = async (email, token, subject, type = "activate") => {
         : "http://localhost:3000";
 
     // Tentukan path berdasarkan jenis email
-    const path = type === "reset" ? `/auth/resetPassword?token=${token}` : `/auth/activate?code=${token}`;
+    const path = type === "reset" ? `/auth/resetPassword?code=${token}` : `/auth/activate?code=${token}`;
 
     const link = `${baseUrl}${path}`;
 
