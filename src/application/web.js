@@ -15,7 +15,7 @@ export const web = express();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const swaggerPath = path.resolve(__dirname, "../../node_modules/swagger-ui-dist/swagger-ui.css");
+const swaggerPath = path.join(__dirname, "../docs/swagger.json");
 const swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, "utf-8"));
 
 web.use(cors());
