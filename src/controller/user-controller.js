@@ -127,7 +127,7 @@ const forgotPasswordCheckEmail = async (req, res, next) => {
 const forgotPassword = async (req, res, next) => {
   try {
     const request = req.body;
-    request.token = req.query.code;
+    request.token = req.params.token;
 
     const result = await userService.changePassword(request);
     res.status(200).json({
