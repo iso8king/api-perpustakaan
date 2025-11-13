@@ -1,5 +1,6 @@
 import express from "express";
 import userController from "../controller/user-controller.js";
+import adminController from "../controller/admin-controller.js";
 
 const publicRouter = express.Router();
 
@@ -12,5 +13,8 @@ publicRouter.patch("/api/users/changePassword/:code", userController.forgotPassw
 publicRouter.post("/api/users/token", userController.token);
 publicRouter.post("/api/users/activate", userController.validating_activation);
 publicRouter.post("/api/users/refreshCode", userController.refresh_activate);
+
+publicRouter.get('/api/books/getAll' , adminController.getAll_buku);
+publicRouter.get('/api/books/search' , adminController.search_buku);
 
 export { publicRouter };

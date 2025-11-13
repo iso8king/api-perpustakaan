@@ -1,17 +1,19 @@
 import { prismaClient } from "../application/database.js";
 import { responseError } from "../error/response-error.js";
 import { validate } from "../validation/validate.js";
-import { createBukuValidation, getBukuValidation, updateBukuValidation } from "../validation/admin-validation.js";
+import { createBukuValidation, getBukuValidation, searchBukuValidation, updateBukuValidation } from "../validation/admin-validation.js";
+
 
 const selectBuku = {
 
             id : true,
             judul : true,
-            pengarang :true,
+            penulis :true,
             penerbit : true,
             tahun_terbit : true,
             kategori : true,
-            stok : true
+            stok : true,
+            isFeatured : true
         
 }
 
@@ -41,9 +43,10 @@ const getBuku = async(idBuku) =>{
 
 const updateBuku = async(request) =>{
     request = validate(updateBukuValidation , request);
+    console.log(request);
 
     const data = {};
-    const fieldDB = ['judul', 'pengarang', 'penerbit', 'tahun_terbit', 'kategori', 'stok'];
+    const fieldDB = ['judul', 'penulis', 'penerbit', 'tahun_terbit', 'kategori', 'stok',"isFeatured"];
 
     //kenapa begini, karena pake patch cek admin validation updateBukuValidation ama adminRouter
    
@@ -78,8 +81,72 @@ const deleteBuku = async(id)=> {
     if(!deleteBook) throw new responseError(404 , "Buku Tidak Di temukan");
 }
 
+const getAllBuku = async()=>{
+    return prismaClient.book.findMany();
+}
+
+const search_buku = async(request) => {
+    request = validate(searchBukuValidation , request);
+
+    const filters = [];
+    const skip = (request.page - 1) * request.size;
+
+    if(request.judul){
+        filters.push({
+            judul : {
+                contains : request.judul,
+                // mode: 'insensitive'
+            }
+        })
+    }
+
+    if(request.kategori){
+        filters.push({
+            kategori : {
+                contains : request.kategori,
+                // mode: 'insensitive'
+            }
+        })
+    }
+
+     if(request.featured !== undefined){
+        filters.push({
+            isFeatured : {
+                equals : request.featured,
+                // mode: 'insensitive'
+            }
+        })
+    }
+
+
+    const buku = await prismaClient.book.findMany({
+        where : {
+            AND : filters
+        },
+        skip : skip,
+        take : request.size,
+        select : selectBuku
+        
+    })
+
+    const totalItems = await prismaClient.book.count({
+        where : {
+            AND : filters
+        }
+    });
+
+    return{
+        data : buku,
+        paging : {
+            page : request.page,
+            totalItems : totalItems,
+            totalPage :  Math.ceil(totalItems/ request.size)
+        }
+    }
+}
+
 
 
 export default{
-    createBuku,getBuku,updateBuku,deleteBuku
+    createBuku,getBuku,updateBuku,deleteBuku,getAllBuku,search_buku
 }
