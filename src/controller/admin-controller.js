@@ -57,6 +57,44 @@ const delete_buku = async(req,res,next)=>{
     }
 }
 
+const getAll_buku = async(req,res,next)=>{
+    try {
+        const result = await adminService.getAllBuku();
+        res.status(200).json({
+            data : result
+        })
+        
+    } catch (e) {
+        next(e)        
+    }
+}
+
+const search_buku = async(req,res,next)=>{
+    try {
+    const size = req.query.size;
+    const page = req.query.page;
+    const judul = req.query.judul;
+    const kategori = req.query.kategori;
+    const featured = req.query.featured;
+    const request = {
+        page,
+        size,
+        judul,
+        kategori,
+        featured
+    }
+
+    const result = await adminService.search_buku(request);
+    res.status(200).json({
+        data : result.data,
+        paging : result.paging
+    })
+        
+    } catch (e) {
+        next(e)        
+    }
+}
+
 export default {
-    create_buku,get_buku,update_buku,delete_buku
+    create_buku,get_buku,update_buku,delete_buku,getAll_buku,search_buku
 }

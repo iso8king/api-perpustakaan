@@ -900,7 +900,8 @@
                                                 "penerbit" : "penerbit",
                                                 "tahun_terbit" : 1999,
                                                 "kategori" : "fiksi",
-                                                "stok" : 1
+                                                "stok" : 1,
+                                                "isFeatured" : true
                                             }
                                         }
                                     
@@ -947,7 +948,8 @@
                                                 "penerbit" : "penerbit",
                                                 "tahun_terbit" : 1999,
                                                 "kategori" : "fiksi",
-                                                "stok" : 1
+                                                "stok" : 1,
+                                                "isFeatured" : true
                                             }
                                         }
                                     
@@ -1023,6 +1025,184 @@
                                     "value" : 
                                          {
                                             "data" : "OK"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    }
+                }
+            }, "/api/books/getAll" : {
+        "get" :{
+            "tags": ["general"],
+            "summary": "get All bUKU",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "array"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                        {
+                                            "data" : [
+                                                {
+                                                "id" : 1,
+                                                "judul" : "buku1",
+                                                "pengarang" : "jondok",
+                                                "penerbit" : "penerbit",
+                                                "tahun_terbit" : 1999,
+                                                "kategori" : "fiksi",
+                                                "stok" : 1,
+                                                "isFeatured" : true
+                                                },
+                                                {
+                                                   "id" : 2,
+                                                "judul" : "buku2",
+                                                "pengarang" : "jondok",
+                                                "penerbit" : "penerbit",
+                                                "tahun_terbit" : 1999,
+                                                "kategori" : "fiksi",
+                                                "stok" : 1,
+                                                "isFeatured" : true 
+                                                }
+                                            ]
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    }
+                }
+            }, "/api/books/search" : {
+        "get" :{
+            "tags": ["general"],
+            "parameters": [
+                {
+                    "name": "size",
+                    "in": "query",
+                    "required": true,
+                    "description": "berapa banyak data yang ingin diambil di per page.default 10",
+                    "schema" : {
+                        "type": "number",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"10"
+                        }
+                    }
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": true,
+                    "description": "page nya.default 1",
+                    "schema" : {
+                        "type": "number",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"10"
+                        }
+                    }
+                },
+                {
+                    "name": "judul",
+                    "in": "query",
+                    "required": false,
+                    "description": "judul opsional pilih salah satu dengan kategori",
+                    "schema" : {
+                        "type": "string",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"a"
+                        }
+                    }
+                },{
+                    "name": "kategori",
+                    "in": "query",
+                    "required": false,
+                    "description": "kategori opsional pilih salah satu dengan judul",
+                    "schema" : {
+                        "type": "string",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"a"
+                        }
+                    }
+                },{
+                    "name": "featured",
+                    "in": "query",
+                    "required": false,
+                    "description": "judul opsional kalo mau ngambil buku yang featured",
+                    "schema" : {
+                        "type": "boolean"
+                         
+                    },"examples": {
+                        "-" : {
+                            "value" :true
+                        }
+                    }
+                }
+            ],
+            "summary": "search buku berdasarkan judul atau kategori atau kedua nya",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "array"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                        {
+                                            "data" : [
+                                                {
+                                                "id" : 1,
+                                                "judul" : "buku1",
+                                                "pengarang" : "jondok",
+                                                "penerbit" : "penerbit",
+                                                "tahun_terbit" : 1999,
+                                                "kategori" : "fiksi",
+                                                "stok" : 1,
+                                                "isFeatured" : true
+                                                },
+                                                {
+                                                   "id" : 2,
+                                                "judul" : "buku2",
+                                                "pengarang" : "jondok",
+                                                "penerbit" : "penerbit",
+                                                "tahun_terbit" : 1999,
+                                                "kategori" : "fiksi",
+                                                "stok" : 1,
+                                                "isFeatured" : true 
+                                                }
+                                            ]
                                         }
                                     
                                 }
