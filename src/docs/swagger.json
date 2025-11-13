@@ -839,7 +839,7 @@
                                             "data" : {
                                                 "id" : 1,
                                                 "judul" : "buku1",
-                                                "pengarang" : "jondok",
+                                                "penulis" : "jondok",
                                                 "penerbit" : "penerbit",
                                                 "tahun_terbit" : 1999,
                                                 "kategori" : "fiksi",
@@ -896,7 +896,7 @@
                                             "data" : {
                                                 "id" : 1,
                                                 "judul" : "buku1",
-                                                "pengarang" : "jondok",
+                                                "penulis" : "jondok",
                                                 "penerbit" : "penerbit",
                                                 "tahun_terbit" : 1999,
                                                 "kategori" : "fiksi",
@@ -944,7 +944,7 @@
                                             "data" : {
                                                 "id" : 1,
                                                 "judul" : "buku1",
-                                                "pengarang" : "jondok",
+                                                "penulis" : "jondok",
                                                 "penerbit" : "penerbit",
                                                 "tahun_terbit" : 1999,
                                                 "kategori" : "fiksi",
@@ -1059,7 +1059,7 @@
                                                 {
                                                 "id" : 1,
                                                 "judul" : "buku1",
-                                                "pengarang" : "jondok",
+                                                "penulis" : "jondok",
                                                 "penerbit" : "penerbit",
                                                 "tahun_terbit" : 1999,
                                                 "kategori" : "fiksi",
@@ -1069,7 +1069,7 @@
                                                 {
                                                    "id" : 2,
                                                 "judul" : "buku2",
-                                                "pengarang" : "jondok",
+                                                "penulis" : "jondok",
                                                 "penerbit" : "penerbit",
                                                 "tahun_terbit" : 1999,
                                                 "kategori" : "fiksi",
@@ -1185,7 +1185,7 @@
                                                 {
                                                 "id" : 1,
                                                 "judul" : "buku1",
-                                                "pengarang" : "jondok",
+                                                "penulis" : "jondok",
                                                 "penerbit" : "penerbit",
                                                 "tahun_terbit" : 1999,
                                                 "kategori" : "fiksi",
@@ -1195,7 +1195,7 @@
                                                 {
                                                    "id" : 2,
                                                 "judul" : "buku2",
-                                                "pengarang" : "jondok",
+                                                "penulis" : "jondok",
                                                 "penerbit" : "penerbit",
                                                 "tahun_terbit" : 1999,
                                                 "kategori" : "fiksi",
@@ -1327,7 +1327,7 @@
                                     "judul" : {
                                         "type": "string"
                                     },
-                                    "pengarang" : {
+                                    "penulis" : {
                                         "type": "string"
                                     },"penerbit" : {
                                         "type": "string"
@@ -1350,7 +1350,7 @@
                                         "type": "string",
                                         "required": false
                                     },
-                                    "pengarang" : {
+                                    "penulis" : {
                                         "type": "string",
                                         "required": false
                                     },"penerbit" : {
