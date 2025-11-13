@@ -82,7 +82,9 @@ const deleteBuku = async(id)=> {
 }
 
 const getAllBuku = async()=>{
-    return prismaClient.book.findMany();
+    return prismaClient.book.findMany({
+        select : selectBuku
+    });
 }
 
 const search_buku = async(request) => {
