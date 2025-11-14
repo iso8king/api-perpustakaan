@@ -68,8 +68,9 @@ const getAll_buku = async(req,res,next)=>{
 
         const result = await adminService.getAllBuku(request);
         res.status(200).json({
-            data : result
-        })
+        data : result.data,
+        paging : result.paging
+    })
         
     } catch (e) {
         next(e)        
