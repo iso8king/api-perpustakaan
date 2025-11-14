@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { publicRouter } from "../routes/public-api.js";
 import { errorMiddleware } from "../middleware/error-middleware.js";
-import { adminRouter, userRouter } from "../routes/api.js";
+import { adminRouter, anggotaRouter, userRouter } from "../routes/api.js";
 import { swaggerUi } from "./swagger.js";
 import fs from "fs";
 import cors from "cors";
@@ -39,6 +39,7 @@ web.use(cookieParser());
 web.use(publicRouter);
 web.use(userRouter);
 web.use(adminRouter);
+web.use(anggotaRouter)
 
 web.use(errorMiddleware);
 
