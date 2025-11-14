@@ -1,5 +1,5 @@
 import adminService from "../service/admin-service.js";
-import userService from "../service/user-service.js";
+
 
 const create_buku = async(req,res,next)=>{
     try {
@@ -59,7 +59,14 @@ const delete_buku = async(req,res,next)=>{
 
 const getAll_buku = async(req,res,next)=>{
     try {
-        const result = await adminService.getAllBuku();
+        const page = req.query.page;
+        const size = req.query.size;
+        const request = {
+            page,
+            size
+        }
+
+        const result = await adminService.getAllBuku(request);
         res.status(200).json({
             data : result
         })

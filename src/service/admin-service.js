@@ -1,7 +1,7 @@
 import { prismaClient } from "../application/database.js";
 import { responseError } from "../error/response-error.js";
 import { validate } from "../validation/validate.js";
-import { createBukuValidation, getBukuValidation, searchBukuValidation, updateBukuValidation } from "../validation/admin-validation.js";
+import { createBukuValidation, getAllValidation, getBukuValidation, searchBukuValidation, updateBukuValidation } from "../validation/admin-validation.js";
 
 
 const selectBuku = {
@@ -81,10 +81,25 @@ const deleteBuku = async(id)=> {
     if(!deleteBook) throw new responseError(404 , "Buku Tidak Di temukan");
 }
 
-const getAllBuku = async()=>{
-    return prismaClient.book.findMany({
-        select : selectBuku
+const getAllBuku = async(request)=>{
+    request = validate(getAllValidation,request)
+    const skip = (request.page - 1) * request.size;
+    const buku = await prismaClient.book.findMany({
+        select : selectBuku,
+        skip : skip,
+        take : request.size
     });
+
+    const totalItems = await prismaClient.book.count();
+
+    return{
+        data : buku,
+        paging : {
+            page : request.page,
+            totalItems : totalItems,
+            totalPage :  Math.ceil(totalItems/ request.size)
+        }
+    }
 }
 
 const search_buku = async(request) => {

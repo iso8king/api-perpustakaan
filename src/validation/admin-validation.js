@@ -30,3 +30,8 @@ export const searchBukuValidation = Joi.object({
     kategori : Joi.string().min(1).optional(),
     featured : Joi.bool().optional()
 })
+
+export const getAllValidation = Joi.object({
+    page : Joi.number().min(1).positive().default(1),
+    size : Joi.number().min(1).max(100).default(10)
+})
