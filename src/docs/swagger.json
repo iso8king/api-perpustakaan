@@ -1212,7 +1212,418 @@
                 }
                     }
                 }
+            },
+        "/api/peminjaman/validate/:id_peminjaman" : {
+        "post" :{
+            "tags": ["admin"],
+            "parameters": [
+                { "$ref" : "#/components/parameters/accessToken"},
+                {
+                    "$ref" : "#/components/parameters/id_peminjaman"
+                }
+            ],
+            "summary": "validasi peminjaman buku dari user",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "array"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                        {
+                                            "data" : "Success"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    }
+                }
+            },"/api/peminjaman/create" : {
+        "post" :{
+            "tags": ["anggota"],
+            "parameters": [
+                {
+                    "$ref" : "#/components/parameters/accessToken"
+                }
+            ],
+            "summary": "anggota create peminjaman buku",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data": {
+                                                 "id": 8,
+                                                 "user_id": 8,
+                                                 "buku_id": 10,
+                                                 "tanggal_pinjam": "2025-11-15T07:58:08.179Z",
+                                                 "tenggat_kembali": "2025-11-29T07:58:08.179Z",
+                                                 "valid": false,
+                                                 "status": "Dipinjam",
+                                                 "user": {
+                                                    "nama": "Ridhooo FIRD"
+                                                  },
+                                                 "buku": {
+                                                   "judul": "Jaka Sembung"
+                                                    }
+                                                }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"409" : {
+                    "description": "stok habis",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "errors" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "err",
+                                    "value" : 
+                                         {
+                                           "errors" : "Peminjaman Gagal karena stok habis"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"410" : {
+                    "description": "Masih meminjam buku yang sama",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "errors" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "err",
+                                    "value" : 
+                                         {
+                                           "errors" : "Anda Masih Meminjam Buku ini"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    },"requestBody" : {
+                "required": true,
+                "description": "masukan id buku yang ingin di pinjam saja",
+                "content": {
+                    "application/json" : {
+                        
+                        "schema" : {
+                            "type": "object",
+                             "properties": {
+                                "buku_id" : {
+                                    "type": "integer",
+                                    "required": true
+                                }
+                             }
+                        }
+                    }
+                }
             }
+                }
+            },"/api/pengembalian/:id_peminjaman" : {
+        "post" :{
+            "tags": ["admin"],
+            "parameters": [
+                {
+                    "$ref" : "#/components/parameters/accessToken"
+                },{
+                     "$ref" : "#/components/parameters/id_peminjaman"
+                }
+            ],
+            "summary": "proses pengembalian Buku",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                         {
+                                            "data": {
+                                                 "id": 3,
+                                                 "peminjaman_id": 8,
+                                                 "tanggal_dikembalikan": "2025-11-30T13:41:24.405Z",
+                                                 "hari_telat": 2,
+                                                 "kondisi_buku": "Hilang",
+                                                 "denda": "105000"
+                                                }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"403" : {
+                    "description": "peminjaman belum di validasi oleh atmin",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "errors" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "err",
+                                    "value" : 
+                                         {
+                                           "errors" : "Peminjaman Belum Di validasi"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                },"409" : {
+                    "description": "peminjaman sudah dikembalikan",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "errors" : {
+                                        "type": "string"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "err",
+                                    "value" : 
+                                         {
+                                           "errors" : "Peminjaman Sudah Dikembalikan"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    },"requestBody" : {
+                "required": true,
+                "description": "masukan kondisi buku ketika dikembalikan,enum hanya menerima `Baik`, 'Rusak', 'Hilang' ",
+                "content": {
+                    "application/json" : {
+                        
+                        "schema" : {
+                            "type": "object",
+                             "properties": {
+                                "kondisi_buku" : {
+                                    "type": "string",
+                                    "required": true
+                                }
+                             }
+                        }
+                    }
+                }
+            }
+                }
+            },"/api/peminjaman/getAll" : {
+        "get" :{
+            "tags": ["admin"],
+            "parameters": [
+                {
+                    "name": "size",
+                    "in": "query",
+                    "required": true,
+                    "description": "berapa banyak data yang ingin diambil di per page.default 10",
+                    "schema" : {
+                        "type": "number",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"10"
+                        }
+                    }
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": true,
+                    "description": "page nya.default 1",
+                    "schema" : {
+                        "type": "number",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"10"
+                        }
+                    }
+                }
+            ],
+            "summary": "get All peminjaman",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "array"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                        {
+                                            "data": [
+        {
+            "id": 8,
+            "user_id": 8,
+            "buku_id": 10,
+            "tanggal_pinjam": "2025-11-15T07:58:08.179Z",
+            "tenggat_kembali": "2025-11-29T07:58:08.179Z",
+            "valid": false,
+            "status": "Dipinjam",
+            "user": {
+                "nama": "Ridhooo FIRD"
+            },
+            "buku": {
+                "judul": "Jaka Sembung"
+            }
+        },
+        {
+            "id": 7,
+            "user_id": 8,
+            "buku_id": 6,
+            "tanggal_pinjam": "2025-11-15T07:55:48.647Z",
+            "tenggat_kembali": "2025-11-29T07:55:48.647Z",
+            "valid": true,
+            "status": "Dikembalikan",
+            "user": {
+                "nama": "Ridhooo FIRD"
+            },
+            "buku": {
+                "judul": "Buku245"
+            }
+        },
+        {
+            "id": 5,
+            "user_id": 8,
+            "buku_id": 2,
+            "tanggal_pinjam": "2025-11-15T07:11:05.981Z",
+            "tenggat_kembali": "2025-11-29T07:11:05.981Z",
+            "valid": true,
+            "status": "Dipinjam",
+            "user": {
+                "nama": "Ridhooo FIRD"
+            },
+            "buku": {
+                "judul": "Buku 1"
+            }
+        }
+    ],
+    "paging": {
+        "page": 1,
+        "totalItems": 10,
+        "totalPage": 1
+    }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    }
+                }
+            },"/api/statistic" : {
+        "get" :{
+            "tags": ["general"],
+            "summary": "get statistik untuk dashboard",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "object"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                        {
+                                            "data": {
+                                                 "total_buku": 10,
+        "total_anggota": 30,
+        "buku_dipinjam": 0,
+        "buku_terlambat": 1
+                                            }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    }
+                }
+            }
+            
+
             
 
 
@@ -1317,6 +1728,20 @@
                     },"examples": {
                         "-" : {
                             "value" :1
+                        }
+                    }
+            },"id_peminjaman" : {
+                "name": "id_peminjaman",
+                    "in": "path",
+                    "required": true,
+                    "description": "ini id peminjaman",
+                    "schema" : {
+                        "type": "number",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" : 1
                         }
                     }
             }

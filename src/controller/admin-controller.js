@@ -77,6 +77,26 @@ const getAll_buku = async(req,res,next)=>{
     }
 }
 
+const getAll_peminjaman = async(req,res,next)=>{
+    try {
+        const page = req.query.page;
+        const size = req.query.size;
+        const request = {
+            page,
+            size
+        }
+
+        const result = await adminService.getAllPeminjaman(request);
+        res.status(200).json({
+        data : result.data,
+        paging : result.paging
+    })
+        
+    } catch (e) {
+        next(e)        
+    }
+}
+
 const search_buku = async(req,res,next)=>{
     try {
     const size = req.query.size;
@@ -103,6 +123,49 @@ const search_buku = async(req,res,next)=>{
     }
 }
 
+const validate_peminjaman = async(req,res,next)=> {
+    try {
+        const request = {
+            id_peminjaman : req.params.id_peminjaman
+        }
+
+        const result = await adminService.validatePeminjaman(request);
+        res.status(200).json({
+            data : "Success"
+        })
+        
+    } catch (e) {
+        next(e);       
+    }
+}
+
+const create_pengembalian = async(req,res,next)=>{
+    try {
+        const request = req.body;
+        request.id_peminjaman = req.params.id_peminjaman
+        const result = await adminService.return_book(request);
+
+        res.status(200).json({
+            data : result
+        })
+        
+    } catch (e) {
+        next(e)        
+    }
+}
+
+const countDashboard = async(req,res,next)=>{
+    try {
+        const result = await adminService.statistik_perpus();
+        res.status(200).json({
+            data : result
+        })
+        
+    } catch (e) {
+        next(e)        
+    }
+}
+
 export default {
-    create_buku,get_buku,update_buku,delete_buku,getAll_buku,search_buku
+    countDashboard,create_pengembalian,create_buku,get_buku,update_buku,delete_buku,getAll_buku,search_buku,getAll_peminjaman,validate_peminjaman
 }

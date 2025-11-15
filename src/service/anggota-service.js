@@ -30,7 +30,7 @@ const createPeminjaman = async(request , user_id)=>{
     }
     });
 
-    if(existingLoan) throw new responseError(410,"Anda Masih Meminjam ini")
+    if(existingLoan) throw new responseError(410,"Anda Masih Meminjam Buku ini")
 
     const stokDecrease = await trx.book.update({
         where : {

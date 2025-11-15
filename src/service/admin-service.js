@@ -1,7 +1,7 @@
 import { prismaClient } from "../application/database.js";
 import { responseError } from "../error/response-error.js";
 import { validate } from "../validation/validate.js";
-import { createBukuValidation, getAllValidation, getBukuValidation, searchBukuValidation, updateBukuValidation } from "../validation/admin-validation.js";
+import { createBukuValidation, getAllValidation, getBukuValidation, searchBukuValidation, updateBukuValidation, validatePeminjamanValidation, validatePengembalianValidation } from "../validation/admin-validation.js";
 
 
 const selectBuku = {
@@ -162,8 +162,153 @@ const search_buku = async(request) => {
     }
 }
 
+const getAllPeminjaman = async(request)=>{
+    request = validate(getAllValidation,request)
+    const skip = (request.page - 1) * request.size;
+    const peminjaman = await prismaClient.peminjaman.findMany({
+        skip : skip,
+        take : request.size,
+        orderBy : {
+            id : "desc"
+        },
+        include : {
+            user : {select : {nama : true}},
+            buku : {select : {judul : true}}
+        }
+    });
+
+    const totalItems = await prismaClient.book.count();
+
+    return{
+        data : peminjaman,
+        paging : {
+            page : request.page,
+            totalItems : totalItems,
+            totalPage :  Math.ceil(totalItems/ request.size)
+        }
+    }
+}
+
+const validatePeminjaman = async(request) => {
+    request = validate(validatePeminjamanValidation , request);
+
+    const checkPeminjaman = await prismaClient.peminjaman.findUnique({
+        where : {
+            id : request.id_peminjaman
+        },select : {
+            valid : true
+        }
+    });
+
+    if(!checkPeminjaman) throw new responseError(404 , "Peminjaman Not Found")
+    if(checkPeminjaman.valid) throw new responseError(410 , "Sudah di Validasi");
+
+    return prismaClient.peminjaman.update({
+        where : {
+            id : request.id_peminjaman
+        },
+        data : {
+            valid : true
+        }
+    })
+}
+
+const return_book = async(request) => {
+    request = validate(validatePengembalianValidation,request);
+    const return_date = new Date();
+    let denda = 0;
+
+    const peminjaman = await prismaClient.peminjaman.findUnique({
+        where : {
+            id : request.id_peminjaman
+        },select : {
+            status : true,
+            valid : true,
+            tenggat_kembali : true,
+            buku_id : true
+        }
+    });
+
+
+    if(!peminjaman) throw new responseError(404, "Peminjaman Not Found!");
+    if(!peminjaman.valid) throw new responseError(403 , "Peminjaman Belum Di validasi");
+    if(peminjaman.status === "Dikembalikan") throw new responseError(409 , "Peminjaman Sudah Dikembalikan");
+
+    const due_date = new Date(peminjaman.tenggat_kembali);
+    let selisih = 0;
+
+    if(peminjaman.tenggat_kembali < return_date) {
+        denda = denda + 5000
+        selisih = Math.ceil((return_date - due_date) / (1000 * 60 *60 * 24));
+    }
+
+    if(request.kondisi_buku === "Rusak"){
+        denda = denda + 10000
+    }else if(request.kondisi_buku === "Hilang"){
+        denda = denda + 100000
+    }
+
+   const [pengembalian] = await prismaClient.$transaction([
+    prismaClient.pengembalian.create({
+        data : {
+           peminjaman_id : request.id_peminjaman,
+           denda : denda,
+           tanggal_dikembalikan : return_date,
+           hari_telat : selisih,
+           kondisi_buku : request.kondisi_buku 
+        }
+   }),
+
+   prismaClient.book.update({
+    where : {
+        id : peminjaman.buku_id
+    },data : {
+        stok : {increment : 1}
+    }
+   }),
+
+  prismaClient.peminjaman.update({
+    where : {
+        id : request.id_peminjaman
+    },data : {
+        status : "Dikembalikan"
+    }}) 
+])
+
+   return pengembalian
+}
+
+const statistik_perpus = async()=>{
+    const total_buku = await prismaClient.book.count();
+    const total_anggota = await prismaClient.user.count({
+        where : {
+            role : "user"
+        }
+    });
+    const buku_dipinjam = await prismaClient.peminjaman.count({
+        where : {
+            status : "Dipinjam"
+        }
+    });
+
+    const buku_terlambat = await prismaClient.pengembalian.count({
+        where : {
+            hari_telat : {
+                gt : 0
+            }
+        }
+    });
+
+    return {
+        total_buku : total_buku,
+        total_anggota : total_anggota,
+        buku_dipinjam : buku_dipinjam,
+        buku_terlambat : buku_terlambat
+    }
+}
+
 
 
 export default{
-    createBuku,getBuku,updateBuku,deleteBuku,getAllBuku,search_buku
+    validatePeminjaman,statistik_perpus,createBuku,getBuku,updateBuku,return_book,deleteBuku,getAllBuku,search_buku,getAllPeminjaman
 }

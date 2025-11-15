@@ -17,9 +17,13 @@ adminRouter.post('/api/books/create' , [authMiddleware , roleMiddleware(["admin"
 adminRouter.get('/api/books/get/:id_buku' , [authMiddleware , roleMiddleware(["admin"])] , adminController.get_buku);
 adminRouter.patch('/api/books/update/:id_buku' , [authMiddleware ,  roleMiddleware(["admin"])] , adminController.update_buku);
 adminRouter.delete('/api/books/delete/:id_buku' , [authMiddleware ,  roleMiddleware(["admin"])] , adminController.delete_buku);
+adminRouter.get('/api/peminjaman/getAll' , [authMiddleware , roleMiddleware("admin")] , adminController.getAll_peminjaman);
+adminRouter.post('/api/peminjaman/validate/:id_peminjaman' , [authMiddleware , roleMiddleware("admin")] , adminController.validate_peminjaman);
+adminRouter.post('/api/pengembalian/:id_peminjaman' , [authMiddleware , roleMiddleware("admin")] , adminController.create_pengembalian);
 
 //anggota
 const anggotaRouter = express.Router();
 anggotaRouter.post('/api/peminjaman/create' , [authMiddleware , roleMiddleware(["user"])],anggotaController.createPeminjaman)
+
 
 export { userRouter , adminRouter , anggotaRouter};

@@ -35,3 +35,12 @@ export const getAllValidation = Joi.object({
     page : Joi.number().min(1).positive().default(1),
     size : Joi.number().min(1).max(100).default(10)
 })
+
+export const validatePeminjamanValidation = Joi.object({
+    id_peminjaman : Joi.number().min(1).required(),
+})
+
+export const validatePengembalianValidation = Joi.object({
+    id_peminjaman : Joi.number().min(1).required(),
+    kondisi_buku : Joi.string().valid("Baik" , "Rusak" , "Hilang").required()
+})
