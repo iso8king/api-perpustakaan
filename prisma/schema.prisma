@@ -47,6 +47,7 @@ model Peminjaman {
   buku_id         Int
   tanggal_pinjam  DateTime
   tenggat_kembali DateTime
+  valid           Boolean           @default(false)
   status          peminjaman_status @default(Dipinjam)
   buku            Book              @relation(fields: [buku_id], references: [id], onDelete: Cascade)
   user            User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -58,11 +59,13 @@ model Peminjaman {
 }
 
 model Pengembalian {
-  id                   Int        @id @default(autoincrement())
-  peminjaman_id        Int        @unique
+  id                   Int                       @id @default(autoincrement())
+  peminjaman_id        Int                       @unique
   tanggal_dikembalikan DateTime
-  denda                Decimal    @db.Decimal(10, 2)
-  peminjaman           Peminjaman @relation(fields: [peminjaman_id], references: [id], onDelete: Cascade)
+  hari_telat           Int
+  kondisi_buku         pengembalian_kondisi_buku
+  denda                Decimal                   @db.Decimal(10, 2)
+  peminjaman           Peminjaman                @relation(fields: [peminjaman_id], references: [id], onDelete: Cascade)
 
   @@map("pengembalian")
 }
@@ -93,4 +96,10 @@ enum statusUser {
 enum peminjaman_status {
   Dipinjam
   Dikembalikan
+}
+
+enum pengembalian_kondisi_buku {
+  Baik
+  Rusak
+  Hilang
 }

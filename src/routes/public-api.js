@@ -16,5 +16,6 @@ publicRouter.post("/api/users/refreshCode", userController.refresh_activate);
 
 publicRouter.get('/api/books/getAll' , adminController.getAll_buku);
 publicRouter.get('/api/books/search' , adminController.search_buku);
+publicRouter.get('/api/statistic' , adminController.countDashboard);
 
 export { publicRouter };
