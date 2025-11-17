@@ -18,9 +18,14 @@ const createPeminjaman = async(req,res,next) => {
 const getPeminjamanUser = async(req,res,next)=>{
     try {
         const id_user = req.user.id;
-        const result = await anggotaService.getUserPeminjaman(id_user);
+        const request = {
+            page : req.query.page,
+            size : req.query.size
+        }
+        const result = await anggotaService.getUserPeminjaman(request,id_user);
         res.status(200).json({
-            data : result
+        data : result.data,
+        paging : result.paging
         })
         
     } catch (e) {

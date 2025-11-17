@@ -1,6 +1,6 @@
 import { prismaClient } from "../application/database.js";
 import { responseError } from "../error/response-error.js";
-import { createPeminjamanValidation } from "../validation/anggota-validation.js";
+import { createPeminjamanValidation, getUserPeminjamanValidation } from "../validation/anggota-validation.js";
 import { validate } from "../validation/validate.js";
 
 const createPeminjaman = async(request , user_id)=>{
@@ -61,12 +61,31 @@ const createPeminjaman = async(request , user_id)=>{
     
 }
 
-const getUserPeminjaman = async(id_user)=>{
-    return prismaClient.peminjaman.findMany({
+const getUserPeminjaman = async(request , id_user)=>{
+    request = validate(getUserPeminjamanValidation,request);
+    const skip = (request.page - 1) * request.size;
+
+    const user = await prismaClient.peminjaman.findMany({
+        where : {
+            user_id : id_user
+        },take : request.size,
+        skip : skip
+    });
+
+    const totalItems = await prismaClient.peminjaman.count({
         where : {
             user_id : id_user
         }
-    });
+    })
+
+     return{
+        data : user,
+        paging : {
+            page : request.page,
+            totalItems : totalItems,
+            totalPage :  Math.ceil(totalItems/ request.size)
+        }
+    }
 }
 
 export default{

@@ -6,3 +6,8 @@ export const createPeminjamanValidation = Joi.object({
     tanggal_pinjam : Joi.date().iso().required(),
     tenggat_kembali : Joi.date().iso().required()
 })
+
+export const getUserPeminjamanValidation = Joi.object({
+    page : Joi.number().min(1).positive().default(1),
+    size : Joi.number().min(1).max(100).default(10)
+})

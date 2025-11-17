@@ -1621,6 +1621,267 @@
                 }
                     }
                 }
+            }, "/api/peminjaman/search" : {
+        "get" :{
+            "tags": ["admin"],
+            "parameters": [
+                {
+                    "name": "size",
+                    "in": "query",
+                    "required": true,
+                    "description": "berapa banyak data yang ingin diambil di per page.default 10",
+                    "schema" : {
+                        "type": "number",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"10"
+                        }
+                    }
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": true,
+                    "description": "page nya.default 1",
+                    "schema" : {
+                        "type": "number",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"10"
+                        }
+                    }
+                },
+                {
+                    "name": "judul",
+                    "in": "query",
+                    "required": false,
+                    "description": "judul opsional pilih salah satu dengan nama user",
+                    "schema" : {
+                        "type": "string",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"a"
+                        }
+                    }
+                },{
+                    "name": "user",
+                    "in": "query",
+                    "required": false,
+                    "description": "nama user opsional",
+                    "schema" : {
+                        "type": "string",
+                         "minLength": 1,
+                        "maxLength": 100
+                    },"examples": {
+                        "-" : {
+                            "value" :"a"
+                        }
+                    }
+                }
+            ],
+            "summary": "search peminjaman berdasarkan nama user atau judul buku",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "array"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                        {
+                                           "data": [
+        {
+            "id": 5,
+            "user_id": 8,
+            "buku_id": 2,
+            "tanggal_pinjam": "2025-11-15T07:11:05.981Z",
+            "tenggat_kembali": "2025-11-29T07:11:05.981Z",
+            "valid": true,
+            "status": "Dikembalikan",
+            "user": {
+                "nama": "Ridhooo FIRD"
+            },
+            "buku": {
+                "judul": "Buku 1"
+            }
+        },
+        {
+            "id": 7,
+            "user_id": 8,
+            "buku_id": 6,
+            "tanggal_pinjam": "2025-11-15T07:55:48.647Z",
+            "tenggat_kembali": "2025-11-29T07:55:48.647Z",
+            "valid": true,
+            "status": "Dikembalikan",
+            "user": {
+                "nama": "Ridhooo FIRD"
+            },
+            "buku": {
+                "judul": "Buku245"
+            }
+        },
+        {
+            "id": 8,
+            "user_id": 8,
+            "buku_id": 10,
+            "tanggal_pinjam": "2025-11-15T07:58:08.179Z",
+            "tenggat_kembali": "2025-11-29T07:58:08.179Z",
+            "valid": true,
+            "status": "Dikembalikan",
+            "user": {
+                "nama": "Ridhooo FIRD"
+            },
+            "buku": {
+                "judul": "Jaka Sembung"
+            }
+        },
+        {
+            "id": 14,
+            "user_id": 8,
+            "buku_id": 11,
+            "tanggal_pinjam": "2025-11-16T13:53:37.556Z",
+            "tenggat_kembali": "2025-11-30T13:53:37.556Z",
+            "valid": false,
+            "status": "Dipinjam",
+            "user": {
+                "nama": "Ridhooo FIRD"
+            },
+            "buku": {
+                "judul": "ayam vs bebek"
+            }
+        },
+        {
+            "id": 17,
+            "user_id": 8,
+            "buku_id": 10,
+            "tanggal_pinjam": "2025-11-17T13:00:22.745Z",
+            "tenggat_kembali": "2025-12-01T13:00:22.745Z",
+            "valid": true,
+            "status": "Dipinjam",
+            "user": {
+                "nama": "Ridhooo FIRD"
+            },
+            "buku": {
+                "judul": "Jaka Sembung"
+            }
+        }
+    ],
+    "paging": {
+        "page": 1,
+        "totalItems": 5,
+        "totalPage": 1
+    }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    }
+                }
+            },"/api/peminjaman/get" : {
+        "get" :{
+            "tags": ["anggota"],
+            "parameters": [
+                {
+                    "$ref" : "#/components/parameters/accessToken"
+                }
+                
+            ],
+            "summary": "GET buku yang dipinjam oleh user yg login",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "array"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                        {
+                                            "data": [
+        {
+            "id": 5,
+            "user_id": 8,
+            "buku_id": 2,
+            "tanggal_pinjam": "2025-11-15T07:11:05.981Z",
+            "tenggat_kembali": "2025-11-29T07:11:05.981Z",
+            "valid": true,
+            "status": "Dikembalikan"
+        },
+        {
+            "id": 7,
+            "user_id": 8,
+            "buku_id": 6,
+            "tanggal_pinjam": "2025-11-15T07:55:48.647Z",
+            "tenggat_kembali": "2025-11-29T07:55:48.647Z",
+            "valid": true,
+            "status": "Dikembalikan"
+        },
+        {
+            "id": 8,
+            "user_id": 8,
+            "buku_id": 10,
+            "tanggal_pinjam": "2025-11-15T07:58:08.179Z",
+            "tenggat_kembali": "2025-11-29T07:58:08.179Z",
+            "valid": true,
+            "status": "Dikembalikan"
+        },
+        {
+            "id": 14,
+            "user_id": 8,
+            "buku_id": 11,
+            "tanggal_pinjam": "2025-11-16T13:53:37.556Z",
+            "tenggat_kembali": "2025-11-30T13:53:37.556Z",
+            "valid": false,
+            "status": "Dipinjam"
+        },
+        {
+            "id": 17,
+            "user_id": 8,
+            "buku_id": 10,
+            "tanggal_pinjam": "2025-11-17T13:00:22.745Z",
+            "tenggat_kembali": "2025-12-01T13:00:22.745Z",
+            "valid": true,
+            "status": "Dipinjam"
+        }
+    ],
+    "paging": {
+        "page": 1,
+        "totalItems": 5,
+        "totalPage": 1
+    }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    }
+                }
             }
             
 
