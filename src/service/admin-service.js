@@ -202,7 +202,7 @@ const searchPeminjaman = async(request)=>{
             }
         })
     }
-    if(request.nama_buku){
+    if(request.judul_buku){
         filters.push({
             buku : {
                 judul : {
