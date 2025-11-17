@@ -33,7 +33,7 @@ model Book {
   tahun_terbit Int          @db.Year
   kategori     String       @db.VarChar(50)
   stok         Int
-  isFeatured   Boolean      @default(false) 
+  isFeatured   Boolean      @default(false)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   peminjaman   Peminjaman[]
@@ -48,7 +48,7 @@ model Peminjaman {
   tanggal_pinjam  DateTime
   tenggat_kembali DateTime
   valid           Boolean           @default(false)
-  status          peminjaman_status @default(Dipinjam)
+  status          peminjaman_status @default(Diproses)
   buku            Book              @relation(fields: [buku_id], references: [id], onDelete: Cascade)
   user            User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
   pengembalian    Pengembalian?
@@ -93,13 +93,14 @@ enum statusUser {
   not_verified
 }
 
-enum peminjaman_status {
-  Dipinjam
-  Dikembalikan
-}
-
 enum pengembalian_kondisi_buku {
   Baik
   Rusak
   Hilang
+}
+
+enum peminjaman_status {
+  Diproses
+  Dipinjam
+  Dikembalikan
 }

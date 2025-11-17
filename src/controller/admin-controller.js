@@ -166,6 +166,26 @@ const countDashboard = async(req,res,next)=>{
     }
 }
 
+const search_peminjaman = async(req,res,next)=>{
+    try {
+        const request = {
+            page : req.query.page,
+            size : req.query.page,
+            nama_user : req.query.user,
+            judul_buku : req.query.buku
+        }
+
+        const result = await adminService.searchPeminjaman(request);
+        res.status(200).json({
+        data : result.data,
+        paging : result.paging
+        })
+        
+    } catch (e) {
+        next(e);        
+    }
+}
+
 export default {
-    countDashboard,create_pengembalian,create_buku,get_buku,update_buku,delete_buku,getAll_buku,search_buku,getAll_peminjaman,validate_peminjaman
+    countDashboard,search_peminjaman,create_pengembalian,create_buku,get_buku,update_buku,delete_buku,getAll_buku,search_buku,getAll_peminjaman,validate_peminjaman
 }

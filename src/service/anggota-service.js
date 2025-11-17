@@ -61,8 +61,16 @@ const createPeminjaman = async(request , user_id)=>{
     
 }
 
+const getUserPeminjaman = async(id_user)=>{
+    return prismaClient.peminjaman.findMany({
+        where : {
+            user_id : id_user
+        }
+    });
+}
+
 export default{
-    createPeminjaman
+    createPeminjaman , getUserPeminjaman
 }
 
 
