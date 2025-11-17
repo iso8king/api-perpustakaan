@@ -170,7 +170,7 @@ const search_peminjaman = async(req,res,next)=>{
     try {
         const request = {
             page : req.query.page,
-            size : req.query.page,
+            size : req.query.size,
             nama_user : req.query.user,
             judul_buku : req.query.buku
         }
