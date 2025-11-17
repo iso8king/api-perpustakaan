@@ -1,7 +1,7 @@
 import { prismaClient } from "../application/database.js";
 import { responseError } from "../error/response-error.js";
 import { validate } from "../validation/validate.js";
-import { createBukuValidation, getAllValidation, getBukuValidation, searchBukuValidation, updateBukuValidation, validatePeminjamanValidation, validatePengembalianValidation } from "../validation/admin-validation.js";
+import { createBukuValidation, getAllValidation, getBukuValidation, searchBukuValidation, searchPeminjamanValidation, updateBukuValidation, validatePeminjamanValidation, validatePengembalianValidation } from "../validation/admin-validation.js";
 
 
 const selectBuku = {
@@ -189,6 +189,65 @@ const getAllPeminjaman = async(request)=>{
     }
 }
 
+const searchPeminjaman = async(request)=>{
+    request = validate(searchPeminjamanValidation,request);
+    const skip = (request.page - 1) * request.size;
+    const filters = []
+    if(request.nama_user){
+        filters.push({
+            user : {
+                nama : {
+                    contains : request.nama_user
+                }
+            }
+        })
+    }
+    if(request.nama_buku){
+        filters.push({
+            buku : {
+                judul : {
+                    contains : request.judul_buku
+                }
+             } 
+        })
+    }
+
+    
+    const peminjaman = await prismaClient.peminjaman.findMany({
+        where : {
+            AND : filters
+        },skip : skip,
+        take : request.size,
+        include : {
+            user : {
+                select : {
+                    nama : true
+                }
+            },
+            buku : {
+                select : {
+                    judul : true
+                }
+            }
+        }
+    });
+
+    const totalItems = await prismaClient.peminjaman.count({
+        where: {
+            AND : filters
+        }
+    })
+
+    return{
+        data : peminjaman,
+        paging : {
+            page : request.page,
+            totalItems : totalItems,
+            totalPage :  Math.ceil(totalItems/ request.size)
+        }
+    }
+};
+
 const validatePeminjaman = async(request) => {
     request = validate(validatePeminjamanValidation , request);
 
@@ -208,7 +267,8 @@ const validatePeminjaman = async(request) => {
             id : request.id_peminjaman
         },
         data : {
-            valid : true
+            valid : true,
+            status : "Dipinjam"
         }
     })
 }
@@ -310,5 +370,5 @@ const statistik_perpus = async()=>{
 
 
 export default{
-    validatePeminjaman,statistik_perpus,createBuku,getBuku,updateBuku,return_book,deleteBuku,getAllBuku,search_buku,getAllPeminjaman
+    searchPeminjaman,validatePeminjaman,statistik_perpus,createBuku,getBuku,updateBuku,return_book,deleteBuku,getAllBuku,search_buku,getAllPeminjaman
 }

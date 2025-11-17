@@ -31,6 +31,13 @@ export const searchBukuValidation = Joi.object({
     featured : Joi.bool().optional()
 })
 
+export const searchPeminjamanValidation = Joi.object({
+    page : Joi.number().min(1).positive().default(1),
+    size : Joi.number().min(1).max(100).default(10),
+    nama_user : Joi.string().max(100).optional(),
+    judul_buku : Joi.string().max(100).optional()
+})
+
 export const getAllValidation = Joi.object({
     page : Joi.number().min(1).positive().default(1),
     size : Joi.number().min(1).max(100).default(10)
