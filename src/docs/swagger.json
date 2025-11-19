@@ -1882,6 +1882,103 @@
                 }
                     }
                 }
+            },"/api/pengembalian/:id_pengembalian" : {
+        "get" :{
+            "tags": ["general"],
+            "parameters": [
+                {
+                    "$ref" : "#/components/parameters/accessToken"
+                }
+                
+            ],
+            "summary": "GET detail pengembalian",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "array"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                        {
+                                           "data": {
+        "id": 1,
+        "peminjaman_id": 7,
+        "tanggal_dikembalikan": "2025-11-15T08:39:24.549Z",
+        "hari_telat": 0,
+        "kondisi_buku": "Baik",
+        "denda": "0",
+        "peminjaman": {
+            "id": 7,
+            "user_id": 8,
+            "buku_id": 6,
+            "tanggal_pinjam": "2025-11-15T07:55:48.647Z",
+            "tenggat_kembali": "2025-11-29T07:55:48.647Z",
+            "valid": true,
+            "status": "Dikembalikan",
+            "user": {
+                "nama": "Ridhooo FIRD"
+            },
+            "buku": {
+                "judul": "Buku245"
+            }
+        }
+                                           }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    }
+                }
+            },
+            "/api/peminjaman/reject/:id_peminjaman" : {
+        "delete" :{
+            "tags": ["admin"],
+            "parameters": [
+                { "$ref" : "#/components/parameters/accessToken"},
+                {
+                    "$ref" : "#/components/parameters/id_peminjaman"
+                }
+            ],
+            "summary": "validasi peminjaman buku dari user",
+            "responses": {
+                "200" : {
+                    "description": "sukses",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type": "object",
+                                "properties": {
+                                    "data" : {
+                                        "type": "array"
+                                    }
+                                }
+                            },"examples": {
+                                "Success" : {
+                                    "description": "success",
+                                    "value" : 
+                                        {
+                                            "data" : "OK"
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                    }
+                }
             }
             
 

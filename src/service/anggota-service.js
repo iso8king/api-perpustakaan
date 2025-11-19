@@ -69,7 +69,18 @@ const getUserPeminjaman = async(request , id_user)=>{
         where : {
             user_id : id_user
         },take : request.size,
-        skip : skip
+        skip : skip,
+        include : {
+            buku : {
+                select : {
+                    judul : true
+                }
+            },user : {
+                select : {
+                    nama : true
+                }
+            }
+        }
     });
 
     const totalItems = await prismaClient.peminjaman.count({
