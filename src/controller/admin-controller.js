@@ -186,6 +186,32 @@ const search_peminjaman = async(req,res,next)=>{
     }
 }
 
+const detail_pengembalian = async(req,res,next)=>{
+    try {
+        const id_pengembalian = req.params.id_pengembalian;
+        const result = await adminService.detail_pengembalian(id_pengembalian);
+        res.status(200).json({
+            data : result
+        })
+        
+    } catch (e) {
+        next(e)        
+    }
+}
+
+const reject_peminjaman = async(req,res,next)=> {
+    try {
+        const id_peminjaman = req.params.id_peminjaman;
+        const result = await adminService.reject_peminjaman(id_peminjaman);
+        res.status(200).json({
+            data : "OK"
+        })
+        
+    } catch (e) {
+        next(e)        
+    }
+}
+
 export default {
-    countDashboard,search_peminjaman,create_pengembalian,create_buku,get_buku,update_buku,delete_buku,getAll_buku,search_buku,getAll_peminjaman,validate_peminjaman
+    countDashboard,reject_peminjaman,detail_pengembalian,search_peminjaman,create_pengembalian,create_buku,get_buku,update_buku,delete_buku,getAll_buku,search_buku,getAll_peminjaman,validate_peminjaman
 }

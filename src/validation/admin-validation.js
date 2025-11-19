@@ -51,3 +51,6 @@ export const validatePengembalianValidation = Joi.object({
     id_peminjaman : Joi.number().min(1).required(),
     kondisi_buku : Joi.string().valid("Baik" , "Rusak" , "Hilang").required()
 })
+
+export const idPengembalianValidation = Joi.number().min(1).required();
+export const idPeminjamanValidation = Joi.number().min(1).required();

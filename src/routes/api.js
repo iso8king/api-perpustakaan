@@ -21,6 +21,8 @@ adminRouter.get('/api/peminjaman/getAll' , [authMiddleware , roleMiddleware("adm
 adminRouter.post('/api/peminjaman/validate/:id_peminjaman' , [authMiddleware , roleMiddleware("admin")] , adminController.validate_peminjaman);
 adminRouter.post('/api/pengembalian/:id_peminjaman' , [authMiddleware , roleMiddleware("admin")] , adminController.create_pengembalian);
 adminRouter.get('/api/peminjaman/search' , [authMiddleware , roleMiddleware("admin")] , adminController.search_peminjaman);
+adminRouter.get('/api/pengembalian/:id_pengembalian' , [authMiddleware ] , adminController.detail_pengembalian);
+adminRouter.delete('/api/peminjaman/reject/:id_peminjaman' , [authMiddleware , roleMiddleware("admin")] , adminController.reject_peminjaman);
 
 //anggota
 const anggotaRouter = express.Router();

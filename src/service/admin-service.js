@@ -1,7 +1,7 @@
 import { prismaClient } from "../application/database.js";
 import { responseError } from "../error/response-error.js";
 import { validate } from "../validation/validate.js";
-import { createBukuValidation, getAllValidation, getBukuValidation, searchBukuValidation, searchPeminjamanValidation, updateBukuValidation, validatePeminjamanValidation, validatePengembalianValidation } from "../validation/admin-validation.js";
+import { createBukuValidation, getAllValidation, getBukuValidation, idPeminjamanValidation, idPengembalianValidation, searchBukuValidation, searchPeminjamanValidation, updateBukuValidation, validatePeminjamanValidation, validatePengembalianValidation } from "../validation/admin-validation.js";
 
 
 const selectBuku = {
@@ -87,7 +87,10 @@ const getAllBuku = async(request)=>{
     const buku = await prismaClient.book.findMany({
         select : selectBuku,
         skip : skip,
-        take : request.size
+        take : request.size,
+        orderBy : {
+            id : "desc"
+        }
     });
 
     const totalItems = await prismaClient.book.count();
@@ -367,8 +370,54 @@ const statistik_perpus = async()=>{
     }
 }
 
+const detail_pengembalian = async(id_pengembalian)=>{
+    id_pengembalian = validate(idPengembalianValidation,id_pengembalian)
+    return prismaClient.pengembalian.findUnique({
+        where : {
+            id : id_pengembalian
+        },include : {
+            peminjaman : {
+                include : {
+                    user : {
+                        select : {
+                            nama : true
+                        }
+                    },
+                    buku : {
+                        select : {
+                            judul : true
+                        }
+                    }
+                }
+            }
+        }
+    })
+}
+
+const reject_peminjaman = async(id_peminjaman) => {
+    id_peminjaman = validate(idPeminjamanValidation,id_peminjaman);
+
+    const checkPeminjaman = await prismaClient.peminjaman.findUnique({
+        where : {
+            id : id_peminjaman
+        },select : {
+            valid : true
+        }
+    });
+
+    if(!checkPeminjaman) throw new responseError(404 , "Peminjaman Not Found")
+    if(checkPeminjaman.valid) throw new responseError(410 , "Sudah di Validasi");
+
+    return prismaClient.peminjaman.delete({
+        where : {
+            id : id_peminjaman
+        }
+    })
+}
+
+
 
 
 export default{
-    searchPeminjaman,validatePeminjaman,statistik_perpus,createBuku,getBuku,updateBuku,return_book,deleteBuku,getAllBuku,search_buku,getAllPeminjaman
+    detail_pengembalian,reject_peminjaman,searchPeminjaman,validatePeminjaman,statistik_perpus,createBuku,getBuku,updateBuku,return_book,deleteBuku,getAllBuku,search_buku,getAllPeminjaman
 }
