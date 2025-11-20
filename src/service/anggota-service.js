@@ -70,6 +70,9 @@ const getUserPeminjaman = async(request , id_user)=>{
             user_id : id_user
         },take : request.size,
         skip : skip,
+        orderBy : {
+            id : "desc"
+        },
         include : {
             buku : {
                 select : {
@@ -99,8 +102,77 @@ const getUserPeminjaman = async(request , id_user)=>{
     }
 }
 
+const statistik_user = async(id_user) => {
+    const dipinjam = await prismaClient.peminjaman.count({
+        where : {
+            user_id : id_user,
+            status : "Dipinjam"
+        }
+    });
+
+    const konfirmasi = await prismaClient.peminjaman.count({
+        where : {
+            user_id : id_user,
+            status : "Diproses"
+        }
+    });
+
+    const awalHari = new Date();
+    awalHari.setHours(0,0,0,0);
+
+    const akhirHari = new Date();
+    akhirHari.setHours(23,59,59,999);
+
+
+    const jatuh_tempo = await prismaClient.peminjaman.count({
+        where : {
+            user_id : id_user,
+            tenggat_kembali : {
+                gte : awalHari,
+                lte : akhirHari
+            }
+
+        }
+    });
+
+    const terlambat = await prismaClient.pengembalian.count({
+        where : {
+            peminjaman : {
+                user_id : id_user
+            },
+            hari_telat : {
+                gte : 1 
+            }
+        }
+    });
+
+    const riwayat_peminjaman = await prismaClient.peminjaman.count({
+        where: {
+            status : "Dikembalikan",
+            user_id : id_user
+        }
+    });
+
+    const total_peminjaman = await prismaClient.peminjaman.count({
+        where : {
+            user_id : id_user
+        }
+    });
+
+    return {
+        dipinjam, 
+        konfirmasi,
+        jatuh_tempo,
+        terlambat,
+        riwayat_peminjaman,
+        total_peminjaman
+    }
+
+
+}
+
 export default{
-    createPeminjaman , getUserPeminjaman
+    createPeminjaman , getUserPeminjaman,statistik_user
 }
 
 

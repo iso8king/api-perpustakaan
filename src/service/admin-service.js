@@ -362,6 +362,8 @@ const statistik_perpus = async()=>{
         }
     });
 
+    
+
     return {
         total_buku : total_buku,
         total_anggota : total_anggota,

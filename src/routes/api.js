@@ -28,6 +28,6 @@ adminRouter.delete('/api/peminjaman/reject/:id_peminjaman' , [authMiddleware , r
 const anggotaRouter = express.Router();
 anggotaRouter.post('/api/peminjaman/create' , [authMiddleware , roleMiddleware(["user"])],anggotaController.createPeminjaman)
 anggotaRouter.get('/api/peminjaman/get' , [authMiddleware , roleMiddleware(["user"])],anggotaController.getPeminjamanUser);
-
+anggotaRouter.get('/api/statistik/anggota' , [authMiddleware , roleMiddleware("user")] , anggotaController.getStatistikUser);
 
 export { userRouter , adminRouter , anggotaRouter};
