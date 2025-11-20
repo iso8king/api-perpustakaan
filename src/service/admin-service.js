@@ -372,11 +372,11 @@ const statistik_perpus = async()=>{
     }
 }
 
-const detail_pengembalian = async(id_pengembalian)=>{
-    id_pengembalian = validate(idPengembalianValidation,id_pengembalian)
+const detail_pengembalian = async(id_peminjaman)=>{
+    id_peminjaman = validate(idPengembalianValidation,id_peminjaman)
     return prismaClient.pengembalian.findUnique({
         where : {
-            id : id_pengembalian
+            peminjaman_id : id_peminjaman
         },include : {
             peminjaman : {
                 include : {
