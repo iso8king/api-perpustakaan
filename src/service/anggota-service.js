@@ -118,11 +118,10 @@ const statistik_user = async(id_user) => {
     });
 
     const awalHari = new Date();
-    awalHari.setHours(0,0,0,0);
+    awalHari.setUTCHours(0,0,0,0);
 
     const akhirHari = new Date();
-    akhirHari.setHours(23,59,59,999);
-
+    akhirHari.setUTCHours(23,59,59,999);
 
     const jatuh_tempo = await prismaClient.peminjaman.count({
         where : {
