@@ -372,8 +372,23 @@ const statistik_perpus = async()=>{
     }
 }
 
-const detail_pengembalian = async(id_peminjaman)=>{
-    id_peminjaman = validate(idPengembalianValidation,id_peminjaman)
+const detail_pengembalian = async(id_peminjaman , user)=>{
+    id_peminjaman = validate(idPengembalianValidation,id_peminjaman);
+
+    if(user.role !== "admin"){
+        const peminjaman = await prismaClient.peminjaman.findUnique({
+        where : {
+            id : id_peminjaman
+        },
+        select : {
+            user_id : true
+        }
+    });
+
+    if(peminjaman.user_id !== user.id) throw new responseError(403 , "Forbidden");
+    }
+
+
     return prismaClient.pengembalian.findUnique({
         where : {
             peminjaman_id : id_peminjaman

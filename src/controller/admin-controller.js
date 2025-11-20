@@ -189,7 +189,8 @@ const search_peminjaman = async(req,res,next)=>{
 const detail_pengembalian = async(req,res,next)=>{
     try {
         const id_peminjaman = req.params.id_peminjaman;
-        const result = await adminService.detail_pengembalian(id_peminjaman);
+        const user = req.user;
+        const result = await adminService.detail_pengembalian(id_peminjaman,user);
         res.status(200).json({
             data : result
         })
