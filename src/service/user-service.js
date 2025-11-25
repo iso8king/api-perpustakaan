@@ -60,7 +60,8 @@ const register = async (request) => {
       email: true,
       nama: true,
       role: true,
-      status: true,
+      kelas : true,
+      status: true
     },
   });
 
@@ -221,6 +222,10 @@ const updateProfile = async (request) => {
     data.nama = request.nama;
   }
 
+  if(request.kelas){
+    data.kelas = request.kelas;
+  }
+
   // const otp = generateOTP();
   // const otpHash = await bcrypt.hash(otp , 10);
   // data.otp = otpHash;
@@ -244,6 +249,7 @@ const updateProfile = async (request) => {
       email: true,
       nama: true,
       status: true,
+      kelas : true
     },
   });
 

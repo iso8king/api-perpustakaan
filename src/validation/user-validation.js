@@ -5,6 +5,7 @@ export const registerUserValidation = Joi.object({
     password : Joi.string().max(100).required(),
     nama : Joi.string().max(100).required(),
     role : Joi.string().valid("admin" , "user"),
+    kelas : Joi.string().max(12).optional()
     // otp : Joi.string().max(100).required(),
     // otpExp : Joi.date().iso().required()
 })
@@ -28,7 +29,8 @@ export const updateUserValidation = Joi.object({
     email : Joi.string().email().max(100).optional(),
     nama : Joi.string().max(100).optional(),
     id : Joi.number().min(1).required(),
-    emailFirst : Joi.string().email().max(100).required()
+    emailFirst : Joi.string().email().max(100).required(),
+    kelas : Joi.string().max(12).optional()
 })
 
 export const emailUserValidation2 = Joi.object({

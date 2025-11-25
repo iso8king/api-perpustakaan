@@ -5,7 +5,7 @@ import { validate } from "../validation/validate.js";
 
 const createPeminjaman = async(request , user_id)=>{
     request.tanggal_pinjam = new Date();
-    request.tenggat_kembali = new Date(Date.now() + 14*24*60*60*1000); //ini 2 minggu / 14 hari
+    request.tenggat_kembali = new Date(Date.now() + 3*24*60*60*1000); //ini 2 minggu / 14 hari
     
     request = validate(createPeminjamanValidation , request);
     request.user_id = user_id
@@ -45,7 +45,8 @@ const createPeminjaman = async(request , user_id)=>{
         include : {
             user : {
                 select : {
-                    nama : true
+                    nama : true,
+                    kelas : true
                 }
             },
             buku : {
@@ -80,7 +81,8 @@ const getUserPeminjaman = async(request , id_user)=>{
                 }
             },user : {
                 select : {
-                    nama : true
+                    nama : true,
+                    kelas : true
                 }
             }
         }

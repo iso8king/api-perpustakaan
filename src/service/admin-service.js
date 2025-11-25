@@ -175,7 +175,7 @@ const getAllPeminjaman = async(request)=>{
             id : "desc"
         },
         include : {
-            user : {select : {nama : true}},
+            user : {select : {nama : true , kelas : true}},
             buku : {select : {judul : true}}
         }
     });
@@ -224,7 +224,8 @@ const searchPeminjaman = async(request)=>{
         include : {
             user : {
                 select : {
-                    nama : true
+                    nama : true,
+                    kelas : true
                 }
             },
             buku : {
@@ -301,14 +302,8 @@ const return_book = async(request) => {
     let selisih = 0;
 
     if(peminjaman.tenggat_kembali < return_date) {
-        denda = denda + 5000
         selisih = Math.ceil((return_date - due_date) / (1000 * 60 *60 * 24));
-    }
-
-    if(request.kondisi_buku === "Rusak"){
-        denda = denda + 10000
-    }else if(request.kondisi_buku === "Hilang"){
-        denda = denda + 100000
+        denda = selisih*500;
     }
 
    const [pengembalian] = await prismaClient.$transaction([
@@ -397,7 +392,8 @@ const detail_pengembalian = async(id_peminjaman , user)=>{
                 include : {
                     user : {
                         select : {
-                            nama : true
+                            nama : true,
+                            kelas : true
                         }
                     },
                     buku : {
