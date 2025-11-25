@@ -13,7 +13,8 @@ const selectBuku = {
             tahun_terbit : true,
             kategori : true,
             stok : true,
-            isFeatured : true
+            isFeatured : true,
+            buku_paket : true
         
 }
 
@@ -46,7 +47,7 @@ const updateBuku = async(request) =>{
     console.log(request);
 
     const data = {};
-    const fieldDB = ['judul', 'penulis', 'penerbit', 'tahun_terbit', 'kategori', 'stok',"isFeatured"];
+    const fieldDB = ['judul', 'penulis', 'penerbit', 'tahun_terbit', 'kategori', 'stok',"isFeatured","buku_paket"];
 
     //kenapa begini, karena pake patch cek admin validation updateBukuValidation ama adminRouter
    
@@ -133,6 +134,15 @@ const search_buku = async(request) => {
         filters.push({
             isFeatured : {
                 equals : request.featured,
+                // mode: 'insensitive'
+            }
+        })
+    }
+
+    if(request.buku_paket !== undefined){
+        filters.push({
+            buku_paket : {
+                equals : request.buku_paket,
                 // mode: 'insensitive'
             }
         })
@@ -313,7 +323,7 @@ const return_book = async(request) => {
            denda : denda,
            tanggal_dikembalikan : return_date,
            hari_telat : selisih,
-           kondisi_buku : request.kondisi_buku 
+           kondisi_buku : request.kondisi_buku
         }
    }),
 

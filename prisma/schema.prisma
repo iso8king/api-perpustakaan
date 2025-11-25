@@ -34,7 +34,7 @@ model Book {
   kategori     String       @db.VarChar(50)
   stok         Int
   buku_paket   Boolean      @default(false)
-  isFeatured   Boolean          @default(false) 
+  isFeatured   Boolean      @default(false) 
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   peminjaman   Peminjaman[]
