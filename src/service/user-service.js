@@ -14,6 +14,7 @@ import {
 import { validate } from "../validation/validate.js";
 import { sendLink, sendOTP } from "../application/mailer.js";
 import crypto from "crypto";
+import { Console } from "console";
 
 function generateOTP() {
   return Math.floor(1000 + Math.random() * 9000).toString();
@@ -193,6 +194,7 @@ const getUser = async (email) => {
       nama: true,
       role: true,
       status: true,
+      kelas : true
     },
   });
 
@@ -379,6 +381,31 @@ const validate_activation = async (token) => {
   return user;
 };
 
+const deleteUserWhoAlreadyGraduate = async()=>{
+    const cutOffDate = new Date();
+    cutOffDate.setFullYear(cutOffDate.getFullYear() - 3);
+    cutOffDate.setMonth(cutOffDate.getMonth() - 6);
+
+    const deletedUser = await prismaClient.user.deleteMany({
+      where : {
+        AND : [
+          {
+            createdAt : {
+              lte : cutOffDate
+            }
+          },
+          {
+            role : "user"
+          }
+        ]
+      }
+    });
+
+    return deletedUser.count
+
+}
+
+
 export default {
   register,
   validate_activation,
@@ -390,4 +417,5 @@ export default {
   forgotPasswordCheckEmail,
   changePassword,
   refresh_activate,
+  deleteUserWhoAlreadyGraduate
 };

@@ -7,7 +7,7 @@
   "scripts": {
     "start": "nodemon src/app.js",
     "test": "jest",
-     "postinstall": "prisma generate"
+    "postinstall": "prisma generate"
   },
   "jest": {
     "transform": {
@@ -25,6 +25,7 @@
     "express": "^4.18.2",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.2",
+    "node-cron": "^4.2.1",
     "nodemailer": "^7.0.10",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
