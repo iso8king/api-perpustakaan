@@ -7,7 +7,8 @@ export const createBukuValidation = Joi.object({
     tahun_terbit : Joi.number().integer().min(1900).max(new Date().getFullYear()).required(),
     kategori : Joi.string().max(50).required(),
     stok : Joi.number().min(1).required(),
-    isFeatured : Joi.boolean().optional()
+    isFeatured : Joi.boolean().optional(),
+    buku_paket : Joi.boolean().optional()
 })
 
 export const getBukuValidation = Joi.number().min(1).required();
@@ -20,7 +21,8 @@ export const updateBukuValidation = Joi.object({
     tahun_terbit : Joi.number().integer().min(1900).max(new Date().getFullYear()).optional(),
     kategori : Joi.string().max(50).optional(),
     stok : Joi.number().min(1).optional(),
-    isFeatured : Joi.boolean().optional()
+    isFeatured : Joi.boolean().optional(),
+    buku_paket : Joi.boolean().optional()
 })
 
 export const searchBukuValidation = Joi.object({
@@ -28,7 +30,8 @@ export const searchBukuValidation = Joi.object({
     size : Joi.number().min(1).max(100).default(10),
     judul : Joi.string().min(1).optional(),
     kategori : Joi.string().min(1).optional(),
-    featured : Joi.bool().optional()
+    featured : Joi.bool().optional(),
+    buku_paket : Joi.boolean().optional()
 })
 
 export const searchPeminjamanValidation = Joi.object({

@@ -104,12 +104,14 @@ const search_buku = async(req,res,next)=>{
     const judul = req.query.judul;
     const kategori = req.query.kategori;
     const featured = req.query.featured;
+    const buku_paket = req.query.paket;
     const request = {
         page,
         size,
         judul,
         kategori,
-        featured
+        featured,
+        buku_paket
     }
 
     const result = await adminService.search_buku(request);
@@ -173,6 +175,7 @@ const search_peminjaman = async(req,res,next)=>{
             size : req.query.size,
             nama_user : req.query.user,
             judul_buku : req.query.buku
+
         }
 
         const result = await adminService.searchPeminjaman(request);
