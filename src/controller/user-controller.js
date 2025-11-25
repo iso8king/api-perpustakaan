@@ -185,6 +185,18 @@ const validating_activation = async (req, res, next) => {
   }
 };
 
+const deleteGraduatedUser = async(req,res,next)=>{
+  try {
+    const result = await userService.deleteUserWhoAlreadyGraduate();
+    res.status(200).json({
+      affectedUser : result
+    })
+    
+  } catch (e) {
+    next(e)   
+  }
+}
+
 export default {
   validating_activation,
   get,
@@ -197,4 +209,5 @@ export default {
   updateProfile,
   forgotPasswordCheckEmail,
   forgotPassword,
+  deleteGraduatedUser
 };
