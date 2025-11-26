@@ -45,6 +45,21 @@ const getStatistikUser = async(req,res,next)=>{
         next(e)        
     }
 }
+
+const peminjamanPaket = async(req,res,next)=>{
+    try {
+        const id_buku = req.params.id_buku;
+        const buku_id = req.user.id;
+        const result = await anggotaService.pinjam_paket(id_buku , buku_id);
+        res.status(200).json({
+            data : result
+        })
+        
+    } catch (e) {
+        next(e);        
+    }
+}
+
 export default {
-    createPeminjaman,getPeminjamanUser,getStatistikUser
+    createPeminjaman,getPeminjamanUser,getStatistikUser,peminjamanPaket
 }
