@@ -27,6 +27,7 @@ adminRouter.delete('/api/peminjaman/reject/:id_peminjaman' , [authMiddleware , r
 
 //anggota
 const anggotaRouter = express.Router();
+anggotaRouter.post('/api/peminjaman/createPaket/:id_buku' , [authMiddleware , roleMiddleware(["user"])] , anggotaController.peminjamanPaket);
 anggotaRouter.post('/api/peminjaman/create' , [authMiddleware , roleMiddleware(["user"])],anggotaController.createPeminjaman)
 anggotaRouter.get('/api/peminjaman/get' , [authMiddleware , roleMiddleware(["user"])],anggotaController.getPeminjamanUser);
 anggotaRouter.get('/api/statistik/anggota' , [authMiddleware , roleMiddleware("user")] , anggotaController.getStatistikUser);

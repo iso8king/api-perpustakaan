@@ -11,3 +11,5 @@ export const getUserPeminjamanValidation = Joi.object({
     page : Joi.number().min(1).positive().default(1),
     size : Joi.number().min(1).max(100).default(10)
 })
+
+export const peminjamanPaketValidation = Joi.number().min(1).required();

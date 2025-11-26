@@ -1,23 +1,39 @@
 import { prismaClient } from "../application/database.js";
 import { responseError } from "../error/response-error.js";
-import { createPeminjamanValidation, getUserPeminjamanValidation } from "../validation/anggota-validation.js";
+import { createPeminjamanValidation, getUserPeminjamanValidation, peminjamanPaketValidation } from "../validation/anggota-validation.js";
 import { validate } from "../validation/validate.js";
+
+function getTenggatJuni(userDate = new Date()) {
+  const year = userDate.getFullYear();
+  const month = userDate.getMonth();
+  const day = userDate.getDate();
+
+  let targetYear = year;
+  if (month > 5) {
+    targetYear = year + 1;
+  }
+
+  return new Date(targetYear, 5, day, 23, 59, 59, 999);
+}
 
 const createPeminjaman = async(request , user_id)=>{
     request.tanggal_pinjam = new Date();
-    request.tenggat_kembali = new Date(Date.now() + 3*24*60*60*1000); //ini 2 minggu / 14 hari
+    request.tenggat_kembali = new Date(Date.now() + 3*24*60*60*1000); 
     
     request = validate(createPeminjamanValidation , request);
     request.user_id = user_id
+    
 
     return prismaClient.$transaction(async(trx)=> {
     const checkBookInDb = await trx.book.findUnique({
         where : {
             id : request.buku_id
         },select : {
-            stok : true
+            stok : true,
+            buku_paket : true
         }
-    })
+    });
+
     if(!checkBookInDb) throw new responseError(404, "Buku Not Found");
     if(checkBookInDb.stok < 1) throw new responseError(409 , "Peminjaman Gagal karena stok habis");
 
@@ -30,7 +46,12 @@ const createPeminjaman = async(request , user_id)=>{
     }
     });
 
-    if(existingLoan) throw new responseError(410,"Anda Masih Meminjam Buku ini")
+    if(existingLoan) throw new responseError(410,"Anda Masih Meminjam Buku ini");
+
+    if(checkBookInDb.buku_paket){
+    const tenggat = getTenggatJuni(new Date());
+    request.tenggat_kembali = tenggat;
+    }
 
     const stokDecrease = await trx.book.update({
         where : {
@@ -172,8 +193,24 @@ const statistik_user = async(id_user) => {
 
 }
 
+const pinjam_paket = async(id_buku , user_id)=>{
+    id_buku = validate(peminjamanPaketValidation , id_buku);
+    
+    const buku = await prismaClient.book.findFirst({
+        where : {
+            id : id_buku
+        },select : {
+            buku_paket : true
+        }
+    });
+
+    if(buku.buku_paket === false) throw new responseError(403 , "Bukan Buku Paket,Tolong pinjam di route yang berbeda");
+    if(!buku) throw new responseError(404 , "Buku Not Found");
+
+}
+
 export default{
-    createPeminjaman , getUserPeminjaman,statistik_user
+    createPeminjaman , getUserPeminjaman,statistik_user,pinjam_paket
 }
 
 
